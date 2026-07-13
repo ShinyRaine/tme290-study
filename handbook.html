@@ -15,7 +15,7 @@
     <div class="links">
       <a href="index.html">复习计划</a>
       <a href="handbook.html" class="active">知识手册</a>
-      <a href="exam.html">模拟自测</a>
+      <a href="exam.html">自测</a>
     </div>
   </div>
 </nav>
@@ -31,8 +31,6 @@
 <div class="toc">
   <strong>目录</strong>
   <ol>
-    <li><a href="#terms">缩写与术语总表</a></li>
-    <li><a href="#method">判断方法：拿不准怎么下笔</a></li>
     <li><a href="#s1">第1节 · 计算平台</a></li>
     <li><a href="#s2">第2节 · 传感器与相机</a></li>
     <li><a href="#s3">第3节 · 软件工程（分值最大）</a></li>
@@ -42,140 +40,9 @@
     <li><a href="#s7">第7节 · 决策 FSM/BBR/ER/ANN</a></li>
     <li><a href="#s8">第8节 · 机器人简史</a></li>
     <li><a href="#quick">附录 · 考前30分钟速览</a></li>
+    <li><a href="#terms">缩写与术语总表（放最后备查）</a></li>
   </ol>
 </div>
-
-<!-- ============ 术语表 ============ -->
-<h2 id="terms">缩写与术语总表（中英对照，记不住名词就翻这里）</h2>
-<p>每一条 = <strong>缩写｜英文全称（这才是记忆的锚）｜中文｜一句话它到底是什么</strong>。缩写记不住，是因为只记了三个字母、没记“它是哪几个词的头字母”。把<strong>全称</strong>读几遍，缩写自然就有意义了。</p>
-
-<h3>计算硬件</h3>
-<dl class="terms">
-  <dt>PLD ｜ Programmable Logic Device ｜ 可编程逻辑器件</dt>
-  <dd>一片能被重新配置成任意专用<strong>电路</strong>的芯片（它是硬件电路，常被误当成小电脑）。极快、省电。</dd>
-  <dt>FPGA ｜ Field-Programmable Gate Array ｜ 现场可编程门阵列</dt>
-  <dd>PLD 的一种，“门阵列”= 一大片逻辑门任你连线。和 PLD 当同义词记即可。</dd>
-  <dt>CPU ｜ Central Processing Unit ｜ 中央处理器</dt>
-  <dd>跑操作系统的通用大脑，能同时管很多程序，但实时性差。</dd>
-  <dt>GPU ｜ Graphics Processing Unit ｜ 图形处理器</dt>
-  <dd>专攻大规模并行矩阵运算，擅长视觉和神经网络。</dd>
-  <dt>MCU ｜ Microcontroller Unit ｜ 微控制器</dt>
-  <dd><strong>一整台“电脑”缩到一块小芯片上</strong>（CPU+内存+输入输出全集成），专门控制一个设备。上电就在<strong>裸硬件上直接跑固定程序</strong>（即“无操作系统”），行为可预测 → 能实时。</dd>
-  <dt>OS ｜ Operating System ｜ 操作系统</dt>
-  <dd>管理硬件、调度多个程序的系统软件（如 Linux）；会为公平不停打断/切换各程序，好处是多任务、坏处是“何时轮到你”不确定 → 难实时。</dd>
-  <dt>real-time ｜ 实时</dt>
-  <dd><strong>保证在规定时间内一定完成（准时、可预测）</strong>就叫实时。无 OS 的微控制器能实时；有 OS 的 CPU 难保证。（记准：实时=准时，跟快慢无关。）</dd>
-  <dt>ROM / RAM ｜ Read-Only / Random-Access Memory ｜ 只读存储器 / 随机存取存储器</dt>
-  <dd>ROM 存固定程序（断电不丢），RAM 是运行时的临时内存（断电即丢）。</dd>
-</dl>
-
-<h3>传感器与相机</h3>
-<dl class="terms">
-  <dt>IR ｜ Infrared ｜ 红外</dt>
-  <dd>红外测距传感器，量程短、有大于零的最小量程。</dd>
-  <dt>RGB ｜ Red-Green-Blue ｜ 红绿蓝</dt>
-  <dd>三原色，彩色图像的通道。</dd>
-  <dt>ISP ｜ Image Signal Processor ｜ 图像信号处理器</dt>
-  <dd>相机里把原始感光数据加工成图片的芯片（白平衡/gamma/降噪）。</dd>
-  <dt>HSV ｜ Hue-Saturation-Value ｜ 色相-饱和度-明度</dt>
-  <dd>一种把“颜色”和“亮度”分开的颜色表示法，比 RGB 抗光照变化。</dd>
-</dl>
-
-<h3>软件工程（第二薄弱块，重点读）</h3>
-<dl class="terms">
-  <dt>Docker ｜ 容器化工具</dt>
-  <dd>把程序连同它需要的<strong>所有依赖</strong>打包成一个“集装箱”，搬到任何机器上都一模一样地跑，根治“在我电脑上能跑、到别处就崩”。</dd>
-  <dt>镜像 vs 容器 ｜ image vs container</dt>
-  <dd><strong>镜像 (image)</strong> 是打包好的<strong>静态模板</strong>（像安装光盘）；<strong>容器 (container)</strong> 是镜像<strong>跑起来的运行实例</strong>（像装好正在用的系统）。<code>docker run</code> = 从镜像创建并启动一个容器；<code>docker build</code> 才是造镜像。</dd>
-  <dt>Alpine / Ubuntu ｜ 两种 Linux 发行版</dt>
-  <dd>常用作 Docker 的<strong>基础镜像 (base image)</strong>：Ubuntu 大而全（功能多、体积大），Alpine 极简（体积小）；机器人求小 → 用 <strong>Alpine</strong>。</dd>
-  <dt>多阶段构建 ｜ multi-stage build</dt>
-  <dd>一个 Dockerfile 里写<strong>两个 FROM</strong>——第一阶段(builder)装编译工具把程序编出来，第二阶段只把<strong>编好的程序</strong>复制过去。好处：<strong>最终镜像只含编好的程序 → 很小</strong>（编译工具留在了 builder 阶段）。（24/25 的 Dockerfile 图题考的就是它。）</dd>
-  <dt>微服务 ｜ microservice</dt>
-  <dd>把一个大程序<strong>拆成许多各管一件事的独立小程序</strong>，各自单独开发/部署/替换，之间用统一协议发消息通信。（对立面 = 单体 monolithic：全焊成一大块。）</dd>
-  <dt>技术债 ｜ technical debt</dt>
-  <dd>为图快走捷径而欠下的“债”——当下省事，日后要花更多力气偿还（重构、修 bug）。</dd>
-  <dt>CI ｜ Continuous Integration ｜ 持续集成</dt>
-  <dd>管<strong>“编译+测试”</strong>阶段——每次提交代码，服务器自动构建并跑测试，确保新旧代码合得上。产出一个“通过测试的二进制”。</dd>
-  <dt>CD ｜ Continuous Deployment ｜ 持续部署</dt>
-  <dd>管<strong>“上线”</strong>阶段——把 CI 产出的、测试通过的二进制<strong>自动部署</strong>到产品（机器人）上。</dd>
-  <dt>CI/CD 的区别一句话</dt>
-  <dd><strong>CI 在前，负责“造出并验好一个二进制”；CD 在后，负责“把它自动送上机器人”。</strong>合起来 = 从提交代码到部署上线全自动的流水线。</dd>
-  <dt>CE ｜ Continuous Experimentation ｜ 持续实验</dt>
-  <dd>上线后只先发给一部分机器人（灰度/金丝雀），用数据评估好坏再全量。</dd>
-  <dt>OTA ｜ Over-The-Air (update) ｜ 空中（无线）升级</dt>
-  <dd><strong>远程把新软件“下发/装”到野外机器人上</strong>，方向是<strong>软件往下走</strong>。（对照：软件下发=OTA；数据回传=远程监控。）</dd>
-  <dt>HIL ｜ Hardware-In-the-Loop ｜ 硬件在环</dt>
-  <dd>把<strong>真实硬件</strong>接进测试回路一起测，可自动化。</dd>
-  <dt>SIL ｜ Software-In-the-Loop ｜ 软件在环</dt>
-  <dd>全程在软件仿真里跑真实代码（硬件用仿真替代）。</dd>
-  <dt>DIL / 数据回放 ｜ Data-In-the-Loop / data replay</dt>
-  <dd>回放事先录好的真实数据来测试，开环、完全可复现。<br><strong>记忆串</strong>：SIL（纯软件）→ HIL（接真硬件）→ 数据回放（喂录好的数据）——都是“测试/验证”的手段，越往后越接近现实。</dd>
-  <dt>KPI ｜ Key Performance Indicator ｜ 关键性能指标</dt>
-  <dd>衡量机器人在野外表现好坏的量化指标。</dd>
-  <dt>SSH ｜ Secure Shell ｜ 安全外壳协议</dt>
-  <dd><strong>远程登录</strong>到机器人上敲命令的工具（本职就是登录操作）。</dd>
-  <dt>UDP ｜ User Datagram Protocol ｜ 用户数据报协议</dt>
-  <dd>一种“发出去不等回执”的快速网络传输方式；libcluon 用它的组播 (multicast) 在微服务间传消息。</dd>
-  <dt>ROS ｜ Robot Operating System ｜ 机器人操作系统</dt>
-  <dd>一个大而全但<strong>单体式 (monolithic)</strong> 的机器人软件框架，作为 OpenDLV 的对照物出现。</dd>
-  <dt>OpenDLV</dt>
-  <dd>本课程用的、由许多 libcluon 微服务松散组成的机器人软件环境（相对 ROS 更轻更模块化）。</dd>
-  <dt>ARM64 / AMD64</dt>
-  <dd>两种<strong>CPU 指令集架构</strong>，详见《判断方法》一节的记忆钩子。</dd>
-</dl>
-
-<h3>运动学与状态估计</h3>
-<dl class="terms">
-  <dt>ICR ｜ Instantaneous Centre of Rotation ｜ 瞬时旋转中心</dt>
-  <dd>某一瞬间整台车绕之转圈的那个点，是运动学推导的出发点。</dd>
-  <dt>KF ｜ Kalman Filter ｜ 卡尔曼滤波</dt>
-  <dd>用“模型预测”和“传感器测量”加权融合来估计状态的算法。<strong>只适用于线性系统</strong>。</dd>
-  <dt>EKF ｜ Extended Kalman Filter ｜ 扩展卡尔曼滤波</dt>
-  <dd>KF 的非线性版，用雅可比矩阵局部线性化；差速驱动（含 cos/sin φ）必须用它。</dd>
-  <dt>SLAM ｜ Simultaneous Localisation And Mapping ｜ 同时定位与建图</dt>
-  <dd>机器人边走边估自己位置、边建地图。</dd>
-  <dt>GNSS ｜ Global Navigation Satellite System ｜ 全球导航卫星系统</dt>
-  <dd>卫星定位的统称（GPS 是其中一种）；提供全局参照，但噪声大、频率低。</dd>
-  <dt>IMU ｜ Inertial Measurement Unit ｜ 惯性测量单元</dt>
-  <dd>测加速度和角速度的传感器，用于航位推算。</dd>
-</dl>
-
-<h3>控制与决策</h3>
-<dl class="terms">
-  <dt>PID ｜ Proportional-Integral-Derivative ｜ 比例-积分-微分（控制器）</dt>
-  <dd>三项相加的经典控制器。P 主纠偏、I 消稳态误差、<strong>D 抑制振荡</strong>。</dd>
-  <dt>FSM ｜ Finite-State Machine ｜ 有限状态机</dt>
-  <dd>由“在某状态、满足条件就跳到另一状态”构成的行为切换逻辑；可用作用于全局变量的 if 语句实现。</dd>
-  <dt>BBR ｜ Behaviour-Based Robotics ｜ 基于行为的机器人学</dt>
-  <dd>让一堆简单行为并行、整体智能涌现的范式；灵感来自<strong>动物行为学 (ethology)</strong>。</dd>
-  <dt>ER ｜ Evolutionary Robotics ｜ 进化机器人学</dt>
-  <dd>用进化算法把控制器“演化”出来的范式，行为自然长成（无预设阶段）。</dd>
-  <dt>Symbolic AI ｜ 符号 AI</dt>
-  <dd>先建模再规划、分阶段、集中式的传统范式。</dd>
-  <dt>ANN ｜ Artificial Neural Network ｜ 人工神经网络</dt>
-  <dd>足够大的全连接网是“万能逼近器”，能拟合任意映射。</dd>
-  <dt>GA ｜ Genetic Algorithm ｜ 遗传算法</dt>
-  <dd>随机种群 → 按适应度选择 → 交叉+变异 → 下一代，进化机器人常用它。</dd>
-  <dt>A* / Dijkstra / RRT (Rapidly-exploring Random Tree 快速探索随机树)</dt>
-  <dd>路径规划算法；A* = Dijkstra + 启发式。</dd>
-</dl>
-
-<!-- ============ 判断方法 ============ -->
-<h2 id="method">判断方法：遇到“拿不准”的题怎么下笔</h2>
-<p>三种常见的犹豫，各有破法：</p>
-<div class="principle">
-  <p><strong>1. 先分清问“好不好”还是“能不能”。</strong>看到 <code>good idea / best / recommended / should / most efficient</code> → 按<strong>最佳实践</strong>判：<strong>是坏做法就 FALSE</strong>（哪怕技术上做得到）。例 Q31“把视觉参数硬编码成常量 is a good idea”→ 坏做法 → FALSE。</p>
-  <p>⚠️ <strong><code>can</code> 不等于自动 TRUE</strong>：若“能做到”只能靠歪招/坏做法才成立，答案还是 <strong>FALSE</strong>。例 Q13“用 git 追踪<strong>二进制</strong>”——你确实能把二进制 commit 进 git，但那是歪用（git 本职管源码、二进制溯源靠 CI/CD）→ <strong>FALSE</strong>；换成“追踪<strong>源码</strong>”才 TRUE。</p>
-</div>
-<div class="principle">
-  <p><strong>2. 抓住考的是哪个对比。</strong><code>docker run</code> 的职责就是<strong>“创建并启动一个容器”</strong>，所以 “docker run creates a Docker <strong>container</strong>” = <strong>TRUE</strong>。这题真正考<strong>容器 vs 镜像</strong>：24/25 陷阱版写 “docker run spawns a Docker <strong>image</strong>”（创建镜像）= <strong>FALSE</strong>（造镜像的是 <code>docker build</code>）。</p>
-  <p>⚠️ 关于“同名会报错”：默认不带 <code>--name</code> 时 Docker 每次都<strong>自动随机命名、照样新建</strong>容器；手动指定一个<strong>已存在的名字</strong>才会因重名报错——而那恰恰说明它“正要创建容器”。<strong>判这题只认准一件事：run 产出的是容器。</strong></p>
-</div>
-<div class="principle">
-  <p><strong>3. 给“设备↔CPU”配意义钩子。</strong><strong>小设备省电用 ARM64</strong>（树莓派/机器人）、<strong>大服务器强力用 AMD64/x86</strong>（GitLab CI），架构不同 → 需交叉编译。Q29“架构不同是部署<strong>普遍难点</strong>”→ <strong>FALSE</strong>：交叉编译是<strong>常规操作、能轻松跨过</strong>这个差异。</p>
-</div>
-<div class="hint"><strong>兜底</strong>：答错不扣分，<strong>有一点把握就标 TRUE、绝不留空</strong>——6月有 12 分丢在“该选却留空”。</div>
 
 <!-- ============ 第1节 ============ -->
 <h2 id="s1">第 1 节 · 机器人的四种计算平台（★6月4题全错，L2）</h2>
@@ -253,7 +120,7 @@
   <li><span class="badge year">25 Q14</span> <span class="en">"... compile software on one CPU type (e.g. amd64) to run on another (e.g. arm64)."</span> <span class="badge t">T</span><span class="zh">这才是定义。</span></li>
   <li><span class="badge year">26 Q26</span> <span class="en">"Cross-compilation can be especially useful ... as an automated part of a CI/CD pipeline."</span> <span class="badge t">T</span></li>
   <li><span class="badge year">26 Q29</span> <span class="en">"A general difficulty ... Raspberry Pi uses ARM64 while a GitLab server runs AMD64."</span> <span class="badge f">F</span><span class="zh">架构确实不同，但交叉编译是常规操作、能轻松跨过，所以“难点”说法为 F。（✓答对了）</span></li>
-  <li><span class="badge year">26 Q13</span> <span class="en">"Using git one can achieve traceability of <strong>binaries</strong> for robots."</span> <span class="badge f">F</span> <span class="badge warn">⚠️</span><span class="zh">git 管<strong>源码</strong>、不管二进制；二进制溯源靠 CI/CD（见《判断方法》can 陷阱）。</span></li>
+  <li><span class="badge year">26 Q13</span> <span class="en">"Using git one can achieve traceability of <strong>binaries</strong> for robots."</span> <span class="badge f">F</span> <span class="badge warn">⚠️</span><span class="zh">git 管<strong>源码</strong>、不管二进制；二进制溯源靠 CI/CD（"can" 陷阱：能做到但属歪用 → F）。</span></li>
   <li><span class="badge year">26 Q14</span> <span class="en">"GitLab and GitHub are examples of web-based frontends for git-based CI."</span> <span class="badge t">T</span></li>
   <li><span class="badge year">26 Q15</span> <span class="en">"CI includes automated testing of binaries."</span> <span class="badge t">T</span> <span class="badge warn">⚠️</span><span class="zh">自动测试是 CI 核心。</span></li>
   <li><span class="badge year">26 Q16</span> <span class="en">"HIL can be used as part of automated testing."</span> <span class="badge t">T</span> <span class="badge warn">⚠️</span><span class="zh">硬件在环可自动化。</span></li>
@@ -383,6 +250,124 @@
   <li><strong>考试策略</strong>：答错不扣分，<strong>懂原理有把握就标 TRUE，绝不留空</strong>（上次 12 分丢在留空）；看到 <code>can</code> 先问“要成立是不是得干件蠢事？是 → FALSE”。</li>
 </ol>
 </div>
+
+
+<!-- ============ 术语表 ============ -->
+<h2 id="terms">缩写与术语总表（中英对照，记不住名词就翻这里）</h2>
+<p>每一条 = <strong>缩写｜英文全称（这才是记忆的锚）｜中文｜一句话它到底是什么</strong>。缩写记不住，是因为只记了三个字母、没记“它是哪几个词的头字母”。把<strong>全称</strong>读几遍，缩写自然就有意义了。</p>
+
+<h3>计算硬件</h3>
+<dl class="terms">
+  <dt>PLD ｜ Programmable Logic Device ｜ 可编程逻辑器件</dt>
+  <dd>一片能被重新配置成任意专用<strong>电路</strong>的芯片（它是硬件电路，常被误当成小电脑）。极快、省电。</dd>
+  <dt>FPGA ｜ Field-Programmable Gate Array ｜ 现场可编程门阵列</dt>
+  <dd>PLD 的一种，“门阵列”= 一大片逻辑门任你连线。和 PLD 当同义词记即可。</dd>
+  <dt>CPU ｜ Central Processing Unit ｜ 中央处理器</dt>
+  <dd>跑操作系统的通用大脑，能同时管很多程序，但实时性差。</dd>
+  <dt>GPU ｜ Graphics Processing Unit ｜ 图形处理器</dt>
+  <dd>专攻大规模并行矩阵运算，擅长视觉和神经网络。</dd>
+  <dt>MCU ｜ Microcontroller Unit ｜ 微控制器</dt>
+  <dd><strong>一整台“电脑”缩到一块小芯片上</strong>（CPU+内存+输入输出全集成），专门控制一个设备。上电就在<strong>裸硬件上直接跑固定程序</strong>（即“无操作系统”），行为可预测 → 能实时。</dd>
+  <dt>OS ｜ Operating System ｜ 操作系统</dt>
+  <dd>管理硬件、调度多个程序的系统软件（如 Linux）；会为公平不停打断/切换各程序，好处是多任务、坏处是“何时轮到你”不确定 → 难实时。</dd>
+  <dt>real-time ｜ 实时</dt>
+  <dd><strong>保证在规定时间内一定完成（准时、可预测）</strong>就叫实时。无 OS 的微控制器能实时；有 OS 的 CPU 难保证。（记准：实时=准时，跟快慢无关。）</dd>
+  <dt>ROM / RAM ｜ Read-Only / Random-Access Memory ｜ 只读存储器 / 随机存取存储器</dt>
+  <dd>ROM 存固定程序（断电不丢），RAM 是运行时的临时内存（断电即丢）。</dd>
+</dl>
+
+<h3>传感器与相机</h3>
+<dl class="terms">
+  <dt>IR ｜ Infrared ｜ 红外</dt>
+  <dd>红外测距传感器，量程短、有大于零的最小量程。</dd>
+  <dt>RGB ｜ Red-Green-Blue ｜ 红绿蓝</dt>
+  <dd>三原色，彩色图像的通道。</dd>
+  <dt>ISP ｜ Image Signal Processor ｜ 图像信号处理器</dt>
+  <dd>相机里把原始感光数据加工成图片的芯片（白平衡/gamma/降噪）。</dd>
+  <dt>HSV ｜ Hue-Saturation-Value ｜ 色相-饱和度-明度</dt>
+  <dd>一种把“颜色”和“亮度”分开的颜色表示法，比 RGB 抗光照变化。</dd>
+</dl>
+
+<h3>软件工程（第二薄弱块，重点读）</h3>
+<dl class="terms">
+  <dt>Docker ｜ 容器化工具</dt>
+  <dd>把程序连同它需要的<strong>所有依赖</strong>打包成一个“集装箱”，搬到任何机器上都一模一样地跑，根治“在我电脑上能跑、到别处就崩”。</dd>
+  <dt>镜像 vs 容器 ｜ image vs container</dt>
+  <dd><strong>镜像 (image)</strong> 是打包好的<strong>静态模板</strong>（像安装光盘）；<strong>容器 (container)</strong> 是镜像<strong>跑起来的运行实例</strong>（像装好正在用的系统）。<code>docker run</code> = 从镜像创建并启动一个容器；<code>docker build</code> 才是造镜像。</dd>
+  <dt>Alpine / Ubuntu ｜ 两种 Linux 发行版</dt>
+  <dd>常用作 Docker 的<strong>基础镜像 (base image)</strong>：Ubuntu 大而全（功能多、体积大），Alpine 极简（体积小）；机器人求小 → 用 <strong>Alpine</strong>。</dd>
+  <dt>多阶段构建 ｜ multi-stage build</dt>
+  <dd>一个 Dockerfile 里写<strong>两个 FROM</strong>——第一阶段(builder)装编译工具把程序编出来，第二阶段只把<strong>编好的程序</strong>复制过去。好处：<strong>最终镜像只含编好的程序 → 很小</strong>（编译工具留在了 builder 阶段）。（24/25 的 Dockerfile 图题考的就是它。）</dd>
+  <dt>微服务 ｜ microservice</dt>
+  <dd>把一个大程序<strong>拆成许多各管一件事的独立小程序</strong>，各自单独开发/部署/替换，之间用统一协议发消息通信。（对立面 = 单体 monolithic：全焊成一大块。）</dd>
+  <dt>技术债 ｜ technical debt</dt>
+  <dd>为图快走捷径而欠下的“债”——当下省事，日后要花更多力气偿还（重构、修 bug）。</dd>
+  <dt>CI ｜ Continuous Integration ｜ 持续集成</dt>
+  <dd>管<strong>“编译+测试”</strong>阶段——每次提交代码，服务器自动构建并跑测试，确保新旧代码合得上。产出一个“通过测试的二进制”。</dd>
+  <dt>CD ｜ Continuous Deployment ｜ 持续部署</dt>
+  <dd>管<strong>“上线”</strong>阶段——把 CI 产出的、测试通过的二进制<strong>自动部署</strong>到产品（机器人）上。</dd>
+  <dt>CI/CD 的区别一句话</dt>
+  <dd><strong>CI 在前，负责“造出并验好一个二进制”；CD 在后，负责“把它自动送上机器人”。</strong>合起来 = 从提交代码到部署上线全自动的流水线。</dd>
+  <dt>CE ｜ Continuous Experimentation ｜ 持续实验</dt>
+  <dd>上线后只先发给一部分机器人（灰度/金丝雀），用数据评估好坏再全量。</dd>
+  <dt>OTA ｜ Over-The-Air (update) ｜ 空中（无线）升级</dt>
+  <dd><strong>远程把新软件“下发/装”到野外机器人上</strong>，方向是<strong>软件往下走</strong>。（对照：软件下发=OTA；数据回传=远程监控。）</dd>
+  <dt>HIL ｜ Hardware-In-the-Loop ｜ 硬件在环</dt>
+  <dd>把<strong>真实硬件</strong>接进测试回路一起测，可自动化。</dd>
+  <dt>SIL ｜ Software-In-the-Loop ｜ 软件在环</dt>
+  <dd>全程在软件仿真里跑真实代码（硬件用仿真替代）。</dd>
+  <dt>DIL / 数据回放 ｜ Data-In-the-Loop / data replay</dt>
+  <dd>回放事先录好的真实数据来测试，开环、完全可复现。<br><strong>记忆串</strong>：SIL（纯软件）→ HIL（接真硬件）→ 数据回放（喂录好的数据）——都是“测试/验证”的手段，越往后越接近现实。</dd>
+  <dt>KPI ｜ Key Performance Indicator ｜ 关键性能指标</dt>
+  <dd>衡量机器人在野外表现好坏的量化指标。</dd>
+  <dt>SSH ｜ Secure Shell ｜ 安全外壳协议</dt>
+  <dd><strong>远程登录</strong>到机器人上敲命令的工具（本职就是登录操作）。</dd>
+  <dt>UDP ｜ User Datagram Protocol ｜ 用户数据报协议</dt>
+  <dd>一种“发出去不等回执”的快速网络传输方式；libcluon 用它的组播 (multicast) 在微服务间传消息。</dd>
+  <dt>ROS ｜ Robot Operating System ｜ 机器人操作系统</dt>
+  <dd>一个大而全但<strong>单体式 (monolithic)</strong> 的机器人软件框架，作为 OpenDLV 的对照物出现。</dd>
+  <dt>OpenDLV</dt>
+  <dd>本课程用的、由许多 libcluon 微服务松散组成的机器人软件环境（相对 ROS 更轻更模块化）。</dd>
+  <dt>ARM64 / AMD64</dt>
+  <dd>两种<strong>CPU 指令集架构</strong>。记忆钩子：<strong>小设备省电用 ARM64</strong>（树莓派/机器人）、<strong>大服务器强力用 AMD64/x86</strong>（GitLab CI），架构不同 → 需交叉编译（常规操作，不算"难点"）。</dd>
+</dl>
+
+<h3>运动学与状态估计</h3>
+<dl class="terms">
+  <dt>ICR ｜ Instantaneous Centre of Rotation ｜ 瞬时旋转中心</dt>
+  <dd>某一瞬间整台车绕之转圈的那个点，是运动学推导的出发点。</dd>
+  <dt>KF ｜ Kalman Filter ｜ 卡尔曼滤波</dt>
+  <dd>用“模型预测”和“传感器测量”加权融合来估计状态的算法。<strong>只适用于线性系统</strong>。</dd>
+  <dt>EKF ｜ Extended Kalman Filter ｜ 扩展卡尔曼滤波</dt>
+  <dd>KF 的非线性版，用雅可比矩阵局部线性化；差速驱动（含 cos/sin φ）必须用它。</dd>
+  <dt>SLAM ｜ Simultaneous Localisation And Mapping ｜ 同时定位与建图</dt>
+  <dd>机器人边走边估自己位置、边建地图。</dd>
+  <dt>GNSS ｜ Global Navigation Satellite System ｜ 全球导航卫星系统</dt>
+  <dd>卫星定位的统称（GPS 是其中一种）；提供全局参照，但噪声大、频率低。</dd>
+  <dt>IMU ｜ Inertial Measurement Unit ｜ 惯性测量单元</dt>
+  <dd>测加速度和角速度的传感器，用于航位推算。</dd>
+</dl>
+
+<h3>控制与决策</h3>
+<dl class="terms">
+  <dt>PID ｜ Proportional-Integral-Derivative ｜ 比例-积分-微分（控制器）</dt>
+  <dd>三项相加的经典控制器。P 主纠偏、I 消稳态误差、<strong>D 抑制振荡</strong>。</dd>
+  <dt>FSM ｜ Finite-State Machine ｜ 有限状态机</dt>
+  <dd>由“在某状态、满足条件就跳到另一状态”构成的行为切换逻辑；可用作用于全局变量的 if 语句实现。</dd>
+  <dt>BBR ｜ Behaviour-Based Robotics ｜ 基于行为的机器人学</dt>
+  <dd>让一堆简单行为并行、整体智能涌现的范式；灵感来自<strong>动物行为学 (ethology)</strong>。</dd>
+  <dt>ER ｜ Evolutionary Robotics ｜ 进化机器人学</dt>
+  <dd>用进化算法把控制器“演化”出来的范式，行为自然长成（无预设阶段）。</dd>
+  <dt>Symbolic AI ｜ 符号 AI</dt>
+  <dd>先建模再规划、分阶段、集中式的传统范式。</dd>
+  <dt>ANN ｜ Artificial Neural Network ｜ 人工神经网络</dt>
+  <dd>足够大的全连接网是“万能逼近器”，能拟合任意映射。</dd>
+  <dt>GA ｜ Genetic Algorithm ｜ 遗传算法</dt>
+  <dd>随机种群 → 按适应度选择 → 交叉+变异 → 下一代，进化机器人常用它。</dd>
+  <dt>A* / Dijkstra / RRT (Rapidly-exploring Random Tree 快速探索随机树)</dt>
+  <dd>路径规划算法；A* = Dijkstra + 启发式。</dd>
+</dl>
+
 
 </div>
 

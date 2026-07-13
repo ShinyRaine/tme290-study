@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>TME290 模拟自测 · 60 题判断</title>
+<title>TME290 自测 · 模拟卷 + 三套真题</title>
 <link rel="stylesheet" href="style.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
 </head>
@@ -15,28 +15,24 @@
     <div class="links">
       <a href="index.html">复习计划</a>
       <a href="handbook.html">知识手册</a>
-      <a href="exam.html" class="active">模拟自测</a>
+      <a href="exam.html" class="active">自测</a>
     </div>
   </div>
 </nav>
 
 <div class="wrap">
 
-<div class="hero" id="hero">
-  <h1>模拟卷 (Mock Exam) · 60 题</h1>
-  <p>一题一页：<strong style="color:#fecaca">左 False</strong> / <strong style="color:#a7f3d0">右 True</strong>，答完自动进下一题。对 1 分、错/空 0 分，<strong>answer every question!</strong> 参考线：3 → 45，4 → 51，5 → 56。</p>
-  <details style="margin-top:0.4rem">
-    <summary style="cursor:pointer">完整说明</summary>
-    <p>考前一周（建议 2026-08-18 左右）计时约 <strong>40 分钟</strong>、闭卷完成。这套题是<strong>全新措辞</strong>（不是真题原句），专门检验是否真懂原理。进度自动保存在本机，中途关页不丢。做完交卷后逐题看解析，错题回<a href="handbook.html" style="color:#fff;text-decoration:underline">知识手册</a>对应节看原理。</p>
-  </details>
-  <div class="countdown" id="timer">⏱ 用时 00:00</div>
+<div class="hero">
+  <h1 id="heroTitle">自测题库</h1>
+  <p id="heroDesc">模拟卷 + 2024/2025/2026 三套真题。一题一页：<strong style="color:#fecaca">左 False</strong> / <strong style="color:#a7f3d0">右 True</strong>，答完自动进下一题。对 1 分、错/空 0 分，<strong>answer every question!</strong> 进度自动保存在本机。</p>
 </div>
 
 <div id="app"></div>
 
-<div class="exam-actions">
+<div class="exam-actions" id="actions" style="display:none">
   <button class="btn primary" id="submitBtn">交卷判分</button>
   <button class="btn ghost" id="resetBtn">清空重做</button>
+  <button class="btn ghost" id="pickBtn">切换试卷</button>
   <span class="progress" id="progress"></span>
 </div>
 
@@ -47,72 +43,129 @@
 <script src="exam-data.js"></script>
 <script>
 (function () {
-  var STORE_KEY = 'tme290-mock-v2';
   var appEl = document.getElementById('app');
+  var actionsEl = document.getElementById('actions');
   var progressEl = document.getElementById('progress');
   var submitBtn = document.getElementById('submitBtn');
   var resetBtn = document.getElementById('resetBtn');
-  var timerEl = document.getElementById('timer');
+  var pickBtn = document.getElementById('pickBtn');
+  var heroTitle = document.getElementById('heroTitle');
+  var heroDesc = document.getElementById('heroDesc');
 
-  // 拍平题目并带上分区名
-  var ALL = [];
-  EXAM_DATA.forEach(function (sec) {
-    sec.questions.forEach(function (q) {
-      ALL.push({ n: q.n, q: q.q, a: q.a, e: q.e, section: sec.section });
-    });
-  });
-  var total = ALL.length;
+  var CUR_KEY = 'tme290-current-exam';
+  var exam = null;   // 当前试卷（EXAMS 元素）
+  var ALL = [];      // 当前试卷拍平后的题目
+  var state = null;  // 当前试卷作答状态
 
-  var state = load() || freshState();
-  if (typeof state.idx !== 'number' || state.idx < 0) state.idx = 0;
-  if (state.idx > total) state.idx = total;
-
-  function freshState() {
-    return { answers: {}, submitted: false, startedAt: Date.now(), elapsed: 0, idx: 0 };
-  }
-  function load() {
-    try { return JSON.parse(localStorage.getItem(STORE_KEY)); } catch (e) { return null; }
+  function storeKey(id) { return 'tme290-exam-v1-' + id; }
+  function freshState() { return { answers: {}, submitted: false, idx: 0 }; }
+  function loadState(id) {
+    try { return JSON.parse(localStorage.getItem(storeKey(id))); } catch (e) { return null; }
   }
   function save() {
-    try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) {}
+    if (exam) try { localStorage.setItem(storeKey(exam.id), JSON.stringify(state)); } catch (e) {}
   }
   function answeredCount() { return Object.keys(state.answers).length; }
   function escapeHtml(s) {
     return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
+  function flatten(ex) {
+    var out = [];
+    ex.sections.forEach(function (sec) {
+      sec.questions.forEach(function (q) {
+        out.push({ n: q.n, q: q.q, a: q.a, e: q.e, both: q.both, section: sec.section, context: sec.context });
+      });
+    });
+    return out;
+  }
+  function isCorrect(q, user) {
+    if (user === undefined) return false;
+    if (q.both) return true;
+    return user === (q.a ? 'T' : 'F');
+  }
 
-  // ---- timer ----
-  setInterval(function () {
-    if (!state.submitted) state.elapsed = Date.now() - state.startedAt;
-    var sec = Math.floor(state.elapsed / 1000);
-    var mm = String(Math.floor(sec / 60)).padStart(2, '0');
-    var ss = String(sec % 60).padStart(2, '0');
-    timerEl.textContent = '⏱ 用时 ' + mm + ':' + ss;
-  }, 1000);
+  // ---------- 选卷 ----------
+  function openExam(id) {
+    exam = null;
+    for (var i = 0; i < EXAMS.length; i++) if (EXAMS[i].id === id) exam = EXAMS[i];
+    if (!exam) { renderPicker(); return; }
+    ALL = flatten(exam);
+    state = loadState(id) || freshState();
+    if (typeof state.idx !== 'number' || state.idx < 0) state.idx = 0;
+    if (state.idx > ALL.length) state.idx = ALL.length;
+    try { localStorage.setItem(CUR_KEY, id); } catch (e) {}
+    render();
+  }
 
-  // ---- views ----
+  function backToPicker() {
+    save();
+    exam = null;
+    try { localStorage.removeItem(CUR_KEY); } catch (e) {}
+    renderPicker();
+  }
+
+  function examStatus(ex) {
+    var st = loadState(ex.id);
+    if (!st || (!st.submitted && !Object.keys(st.answers || {}).length)) return '未开始';
+    var total = 0;
+    ex.sections.forEach(function (s) { total += s.questions.length; });
+    if (st.submitted) {
+      var flat = flatten(ex), score = 0;
+      flat.forEach(function (q) { if (st.answers[q.n] !== undefined && isCorrect(q, st.answers[q.n])) score++; });
+      return '已交卷 · ' + score + ' / ' + total;
+    }
+    return '进行中 · 已答 ' + Object.keys(st.answers).length + ' / ' + total;
+  }
+
+  function renderPicker() {
+    heroTitle.textContent = '自测题库';
+    heroDesc.style.display = '';
+    actionsEl.style.display = 'none';
+    var html = '<div class="single">';
+    EXAMS.forEach(function (ex) {
+      var status = examStatus(ex);
+      html +=
+        '<div class="qcard exam-pick" data-id="' + ex.id + '">' +
+          '<div class="meta"><span class="sec">' + escapeHtml(ex.gradeNote) + '</span><span>' + status + '</span></div>' +
+          '<h2 style="margin:0.3rem 0 0.3rem;border:none;padding:0;font-size:1.15rem">' + escapeHtml(ex.title) + '</h2>' +
+          '<p style="margin:0;color:var(--muted);font-size:0.92rem">' + escapeHtml(ex.subtitle) + '</p>' +
+        '</div>';
+    });
+    html += '</div>';
+    appEl.innerHTML = html;
+    appEl.querySelectorAll('.exam-pick').forEach(function (card) {
+      card.addEventListener('click', function () { openExam(card.dataset.id); });
+    });
+    window.scrollTo({ top: 0 });
+  }
+
+  // ---------- 答题 ----------
   function render() {
+    heroTitle.textContent = exam.title;
+    heroDesc.style.display = 'none';
+    actionsEl.style.display = '';
     if (state.submitted) renderResult();
-    else if (state.idx >= total) renderFinish();
+    else if (state.idx >= ALL.length) renderFinish();
     else renderQuestion();
     updateBar();
   }
 
   function updateBar() {
-    progressEl.textContent = state.submitted ? '已交卷' : ('已答 ' + answeredCount() + ' / ' + total);
+    progressEl.textContent = state.submitted ? '已交卷' : ('已答 ' + answeredCount() + ' / ' + ALL.length);
     submitBtn.style.display = state.submitted ? 'none' : '';
   }
 
   function renderQuestion() {
     var q = ALL[state.idx];
     var user = state.answers[q.n];
-    var pct = Math.round(answeredCount() / total * 100);
+    var pct = Math.round(answeredCount() / ALL.length * 100);
 
     appEl.innerHTML =
       '<div class="single">' +
         '<div class="progressbar"><div style="width:' + pct + '%"></div></div>' +
         '<div class="qcard">' +
-          '<div class="meta"><span class="sec">' + escapeHtml(q.section) + '</span><span>第 ' + (state.idx + 1) + ' / ' + total + ' 题</span></div>' +
+          '<div class="meta"><span class="sec">' + escapeHtml(q.section) + '</span><span>第 ' + (state.idx + 1) + ' / ' + ALL.length + ' 题</span></div>' +
+          (q.context || '') +
           '<p class="stem-big">' + escapeHtml(q.q) + '</p>' +
           '<div class="big-tf">' +
             '<button class="bf' + (user === 'F' ? ' sel' : '') + '" id="btnF">✗ False</button>' +
@@ -136,19 +189,17 @@
     var q = ALL[state.idx];
     state.answers[q.n] = v;
     save();
-    // 先显示选中效果，再自动进下一题
     var b = document.getElementById(v === 'T' ? 'btnT' : 'btnF');
     var other = document.getElementById(v === 'T' ? 'btnF' : 'btnT');
-    b.classList.add('sel');
-    other.classList.remove('sel');
+    if (b) { b.classList.add('sel'); other.classList.remove('sel'); }
     var at = state.idx;
     setTimeout(function () {
-      if (state.idx === at && !state.submitted) go(at + 1);
+      if (exam && !state.submitted && state.idx === at) go(at + 1);
     }, 180);
   }
 
   function go(i) {
-    state.idx = Math.max(0, Math.min(total, i));
+    state.idx = Math.max(0, Math.min(ALL.length, i));
     save();
     render();
     window.scrollTo({ top: 0 });
@@ -158,14 +209,13 @@
     var blanks = ALL.filter(function (q) { return state.answers[q.n] === undefined; });
     var html =
       '<div class="single">' +
-        '<div class="progressbar"><div style="width:' + Math.round(answeredCount() / total * 100) + '%"></div></div>' +
+        '<div class="progressbar"><div style="width:' + Math.round(answeredCount() / ALL.length * 100) + '%"></div></div>' +
         '<div class="qcard">' +
-          '<h2 style="margin:0 0 0.6rem;border:none;padding:0">已到卷末 · 已答 ' + answeredCount() + ' / ' + total + '</h2>';
+          '<h2 style="margin:0 0 0.6rem;border:none;padding:0">已到卷末 · 已答 ' + answeredCount() + ' / ' + ALL.length + '</h2>';
     if (blanks.length) {
-      html += '<p>还有 <strong>' + blanks.length + '</strong> 题留空（考场上绝不留空！）：</p><p class="blank-links">' +
-        blanks.map(function (q) {
-          return '<a href="#" data-n="' + q.n + '">Q' + q.n + '</a>';
-        }).join('') + '</p>';
+      html += '<p>还有 <strong>' + blanks.length + '</strong> 题留空' +
+        (exam.penalty ? '（本卷原规则答错倒扣，但有把握就答）' : '（考场上绝不留空！）') + '：</p><p class="blank-links">' +
+        blanks.map(function (q) { return '<a href="#" data-n="' + q.n + '">Q' + q.n + '</a>'; }).join('') + '</p>';
     } else {
       html += '<p>全部作答完毕 🎉 可以交卷了。</p>';
     }
@@ -185,41 +235,43 @@
         go(ALL.findIndex(function (q) { return q.n === n; }));
       });
     });
-    document.getElementById('backBtn').addEventListener('click', function () { go(total - 1); });
+    document.getElementById('backBtn').addEventListener('click', function () { go(ALL.length - 1); });
     document.getElementById('finishSubmit').addEventListener('click', submit);
   }
 
   function renderResult() {
-    var score = 0, blank = 0, wrongList = [];
+    var score = 0, wrong = 0, blank = 0, wrongList = [];
     ALL.forEach(function (q) {
       var user = state.answers[q.n];
-      var correct = q.a ? 'T' : 'F';
       if (user === undefined) { blank++; wrongList.push(q.n); }
-      else if (user === correct) score++;
-      else wrongList.push(q.n);
+      else if (isCorrect(q, user)) score++;
+      else { wrong++; wrongList.push(q.n); }
     });
-    var grade = score >= 56 ? '5（优秀）' : score >= 51 ? '4（良好）' : score >= 45 ? '3（及格）' : '未及格（及格线 45）';
+    var g = exam.grades;
+    var grade = score >= g.g5 ? '5（优秀）' : score >= g.g4 ? '4（良好）' : score >= g.g3 ? '3（及格）' : '未及格（及格线 ' + g.g3 + '）';
 
     var html =
       '<div class="result-banner">' +
-        '<div><span class="score">' + score + '</span> / ' + total + ' · 等级：<strong>' + grade + '</strong></div>' +
+        '<div><span class="score">' + score + '</span> / ' + ALL.length + ' · 等级：<strong>' + grade + '</strong></div>' +
+        (exam.penalty ? '<div>按 2024 原卷规则（答错 −1、留空 0）：<strong>' + (score - wrong) + '</strong> 分</div>' : '') +
         '<div>错题/留空：' + (wrongList.length ? wrongList.map(function (n) { return '<a href="#q' + n + '">' + n + '</a>'; }).join(', ') : '无 🎉') +
-        (blank ? '（其中留空 ' + blank + ' 题——考场上每题必答！）' : '') + '</div>' +
+        (blank ? '（其中留空 ' + blank + ' 题）' : '') + '</div>' +
         '<div style="color:var(--muted);font-size:0.9rem">复盘：点错题号跳到解析，再回<a href="handbook.html">知识手册</a>对应节看原理。</div>' +
       '</div>';
 
-    EXAM_DATA.forEach(function (sec) {
+    exam.sections.forEach(function (sec) {
       html += '<div class="section-title">' + escapeHtml(sec.section) + '</div>';
+      if (sec.context) html += sec.context;
       sec.questions.forEach(function (q) {
         var user = state.answers[q.n];
-        var correct = q.a ? 'T' : 'F';
-        var ok = user === correct;
+        var ok = user !== undefined && isCorrect(q, user);
         var cls = user === undefined ? 'blank-q' : (ok ? 'correct' : 'wrong');
+        var correct = q.both ? 'T/F 均可' : (q.a ? 'T' : 'F');
         html +=
           '<div class="question ' + cls + '" id="q' + q.n + '">' +
             '<p class="stem"><span class="num">' + q.n + '.</span>' + escapeHtml(q.q) + '</p>' +
             '<div class="explain">' +
-              (user === undefined ? '⚠️ <strong>留空</strong>（考场上绝不允许！）' : (ok ? '✅ 答对' : '❌ 答错（你选 ' + (user === 'T' ? 'True' : 'False') + '）')) +
+              (user === undefined ? '⚠️ <strong>留空</strong>' : (ok ? '✅ 答对' : '❌ 答错（你选 ' + (user === 'T' ? 'True' : 'False') + '）')) +
               ' · 正确答案 <strong>' + correct + '</strong> — ' + escapeHtml(q.e) +
             '</div>' +
           '</div>';
@@ -231,30 +283,34 @@
 
   function submit() {
     var done = answeredCount();
-    if (done < total && !confirm('还有 ' + (total - done) + ' 题未作答（考场上绝不留空！）。确定交卷？')) return;
+    if (done < ALL.length && !confirm('还有 ' + (ALL.length - done) + ' 题未作答。确定交卷？')) return;
     state.submitted = true;
     save();
     render();
   }
 
-  // ---- keyboard ----
+  // ---------- 键盘 ----------
   document.addEventListener('keydown', function (ev) {
-    if (state.submitted || state.idx >= total) return;
+    if (!exam || state.submitted || state.idx >= ALL.length) return;
     if (ev.key === 'ArrowLeft') { ev.preventDefault(); answer('F'); }
     else if (ev.key === 'ArrowRight') { ev.preventDefault(); answer('T'); }
     else if (ev.key === 'Backspace') { ev.preventDefault(); go(state.idx - 1); }
   });
 
   submitBtn.addEventListener('click', submit);
+  pickBtn.addEventListener('click', backToPicker);
   resetBtn.addEventListener('click', function () {
-    if (!confirm('清空所有作答并重新计时？')) return;
+    if (!exam || !confirm('清空《' + exam.title + '》的所有作答？')) return;
     state = freshState();
     save();
     render();
     window.scrollTo({ top: 0 });
   });
 
-  render();
+  // 启动：上次在做的卷直接续上，否则进选卷页
+  var cur = null;
+  try { cur = localStorage.getItem(CUR_KEY); } catch (e) {}
+  if (cur) openExam(cur); else renderPicker();
 })();
 </script>
 </body>

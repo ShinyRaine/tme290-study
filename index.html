@@ -15,7 +15,7 @@
     <div class="links">
       <a href="index.html" class="active">复习计划</a>
       <a href="handbook.html">知识手册</a>
-      <a href="exam.html">模拟自测</a>
+      <a href="exam.html">自测</a>
     </div>
   </div>
 </nav>
@@ -30,58 +30,8 @@
 </div>
 
 <div class="card">
-  <h2>〇、6月摸底诊断（据此定优先级）</h2>
-  <p>裸做 2026年6月真题：<strong>40/60，差 5 分及格</strong>（及格线 45）。20 道错题集中在：</p>
-  <div class="table-scroll">
-  <table>
-    <tr><th>薄弱块</th><th>错题号</th><th>优先级</th></tr>
-    <tr><td><strong>软件工程</strong> Docker/微服务/CI-CD/OTA/git/部署</td><td>13, 15, 16, 17, 20, 23, 24</td><td>★★★★★ 最高（分值也最大）</td></tr>
-    <tr><td><strong>计算硬件</strong>（PLD/微控制器/CPU）</td><td>4, 5, 6, 7（全错）</td><td>★★★★★</td></tr>
-    <tr><td>决策 FSM/BBR/ANN</td><td>56, 57, 60</td><td>★★★</td></tr>
-    <tr><td>历史 / 传感器 / 运动学积分 / rate limiter / data replay 调运控</td><td>2, 3 / 11 / 36 / 39 / 33</td><td>★★ 逐条</td></tr>
-  </table>
-  </div>
-  <div class="hint">
-    <strong>两个行为问题（比知识点更值钱）：</strong><br>
-    ① <strong>该选 TRUE 却留空</strong>（20 错中 12 道）：答错不扣分，只要懂原理有一点把握就必须标 TRUE、绝不留空——光这一项就能从 40 提到 52 左右。<br>
-    ② <strong>看到 "can" 就乱选</strong>：“can” 不代表自动为真，若“能做到”只能靠坏做法才成立则出题人要 FALSE（git 追踪的是源码不是二进制）。
-  </div>
-</div>
-
-<div class="card">
-  <h2>一、这门考试是什么（好消息）</h2>
-  <p>分析 2024年8月补考（33题）、2025年5月（46题）、2026年6月（60题）三份真题：</p>
-  <ol>
-    <li><strong>全部是判断题（True/False）</strong>，没有大题、没有自由计算题。只需要「认出对错」，不需要「凭空写出」。</li>
-    <li><strong>2025 年起答错不扣分</strong>（2024 补考曾答错扣 1 分），所以每题都必须作答。</li>
-    <li>及格线约 <strong>75%</strong>——不能有大面积盲区，但也不用追求完美。</li>
-    <li><strong>大量题目逐年回收</strong>，只改措辞或把正/反说法对调。刷熟三份真题 ≈ 覆盖考试的一大半。</li>
-    <li>唯一需要“动手推导”的只有一处：<strong>差速驱动运动学公式</strong>（每年必考 2-3 题，靠草稿纸推导判断公式对错）。</li>
-  </ol>
-
-  <h3>历年考点权重（三份真题合计分值）</h3>
-  <div class="table-scroll">
-  <table>
-    <tr><th>考点块</th><th>出现频率</th><th>合计分值</th><th>优先级</th></tr>
-    <tr><td>Docker / Dockerfile / libcluon</td><td>3/3 年</td><td>~25</td><td>★★★★★</td></tr>
-    <tr><td>微服务架构 / OTA / CI-CD / 交叉编译</td><td>3/3 年</td><td>~19</td><td>★★★★★</td></tr>
-    <tr><td>FSM + 行为机器人(BBR) + Braitenberg + subsumption</td><td>3/3 年</td><td>~22</td><td>★★★★★</td></tr>
-    <tr><td>Kalman 滤波（2026 加深到线性化/EKF）</td><td>3/3 年</td><td>~20</td><td>★★★★★</td></tr>
-    <tr><td>差速驱动运动学（唯一要推导的）</td><td>3/3 年</td><td>7</td><td>★★★★★</td></tr>
-    <tr><td>Kiwi 部署 / SSH / data replay 调参</td><td>2/3 年</td><td>10</td><td>★★★★</td></tr>
-    <tr><td>转向模型（two-point / aim point）+ PID + rate limiter + 仿真</td><td>3/3 年</td><td>~13</td><td>★★★★</td></tr>
-    <tr><td>Symbolic AI / 进化机器人 / ANN 万能逼近</td><td>2/3 年</td><td>7</td><td>★★★</td></tr>
-    <tr><td>【2026新增】机器人历史 / 计算硬件 / 传感器与相机 / CI-CD 独立块</td><td>1/3 年</td><td>17</td><td>★★★★（趋势是必考）</td></tr>
-    <tr><td>Dijkstra 图上手推</td><td>1/3 年（2025）</td><td>4</td><td>★★（备而不押）</td></tr>
-    <tr><td>SLAM / 视觉算法细节</td><td>0/3 年直接考</td><td>0</td><td>★（只需概念）</td></tr>
-  </table>
-  </div>
-  <p><strong>核心四大块（Docker/微服务、Kalman、FSM/BBR、运动学）≈ 每年 60-70% 的分数。</strong></p>
-</div>
-
-<div class="card">
-  <h2>二、学习方法：读原理 → 自己复述 → 真题检验 → 短时高频重复</h2>
-  <p>全部考点已浓缩进<a href="handbook.html">《知识手册》</a>（术语表 + 判断方法 + 8 个知识块，每块 = 一段原理叙述 + 三年真题演练）。<strong>不用再读课件 PDF。</strong></p>
+  <h2>一、学习方法：读原理 → 自己复述 → 真题检验 → 短时高频重复</h2>
+  <p>全部考点已浓缩进<a href="handbook.html">《知识手册》</a>（8 个知识块 + 术语表，每块 = 一段原理叙述 + 三年真题演练）。<strong>不用再读课件 PDF。</strong></p>
   <p><strong>每个知识块三步（约 25 min）：</strong></p>
   <ol>
     <li><strong>读原理</strong>（10-15 min）：把那段“为什么会这样”的因果链读懂。</li>
@@ -106,7 +56,7 @@
 </div>
 
 <div class="card">
-  <h2>三、必背「钓鱼题」清单（历年反复挖的坑）</h2>
+  <h2>二、必背「钓鱼题」清单（历年反复挖的坑）</h2>
   <p>记<strong>事实</strong>，不记句子。出题人每年把同一事实换措辞或反着说来钓鱼，下面每条写的都是“正确的事实本身”。</p>
   <ul>
     <li>φ̇ = (v<sub>R</sub> − v<sub>L</sub>) / <strong>2R</strong> —— 分母是 2R 不是 R；V = (v<sub>R</sub> + v<sub>L</sub>)/2 —— <strong>没有</strong> R</li>
@@ -130,7 +80,7 @@
 </div>
 
 <div class="card">
-  <h2>四、日程（到 8月25日，节奏 = 每次 30-40 min、每周 3-4 次）</h2>
+  <h2>三、日程（到 8月25日，节奏 = 每次 30-40 min、每周 3-4 次）</h2>
   <p>摸底已完成（40/60）。按“先学 → 通关 → 保持”三段走。<strong>日期是弹性的，核心是保证次数和间隔</strong>，别攒到一起。</p>
 
   <h3>阶段 A · 学习（7月上中旬，约 2-3 周，8h）— 按优先级过完 8 块</h3>
@@ -170,7 +120,7 @@
 </div>
 
 <div class="card">
-  <h2>五、风险提示</h2>
+  <h2>四、风险提示</h2>
   <ul>
     <li>出题趋势是<strong>题量变大、覆盖变广</strong>（33 → 46 → 60），2026 年新增的历史/硬件/传感器块大概率保留——不能跳过。</li>
     <li>若补考卷恢复“答错倒扣”规则（2024年8月曾如此），考前务必看清卷首计分说明，再决定不确定题是否留空。</li>
