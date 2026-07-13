@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>TME290 补考备考 · 复习计划</title>
+<title>TME290 知识手册 · 原理复习</title>
 <link rel="stylesheet" href="style.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
 </head>
@@ -13,8 +13,8 @@
   <div class="nav-inner">
     <a class="brand" href="index.html">TME290 <span>自主机器人</span> 备考站</a>
     <div class="links">
-      <a href="index.html" class="active">复习计划</a>
-      <a href="handbook.html">知识手册</a>
+      <a href="index.html" class="active">知识手册</a>
+      <a href="plan.html">复习计划</a>
       <a href="exam.html">自测</a>
     </div>
   </div>
@@ -23,124 +23,398 @@
 <div class="wrap">
 
 <div class="hero">
-  <h1>TME290 / FIM764 Autonomous Robots — 2026年8月补考</h1>
-  <p>考试日期：<strong>2026-08-25（周二）</strong> · 全部判断题（True/False）· 答错不扣分 · 及格线约 75%（60 题对 45 题）</p>
-  <p>备考策略：不背闪卡，精读<a href="handbook.html" style="color:#fff;text-decoration:underline">《原理复习手册》</a>的因果链 + <a href="exam.html" style="color:#fff;text-decoration:underline">真题/模拟卷</a>检验</p>
-  <div class="countdown" id="countdown"></div>
+  <h1>原理复习手册（可直接用于复习）</h1>
+  <p><strong>用法</strong>：这是一本讲清道理的读物（而非背诵卡片）。每一节先讲一个完整原理（为什么会这样），再由这个原理推出考试会问的所有判断句。理解了原理那段话，遇到考题里任何一句话都能自己推出对错。</p>
+  <p><strong>中英对照</strong>：所有考点术语都给英文（考试是全英文的）。<span class="badge warn">⚠️</span> = 2026年6月摸底做错的题（复习重点）。</p>
 </div>
 
-<div class="card">
-  <h2>一、学习方法：读原理 → 自己复述 → 真题检验 → 短时高频重复</h2>
-  <p>全部考点已浓缩进<a href="handbook.html">《知识手册》</a>（8 个知识块 + 术语表，每块 = 一段原理叙述 + 三年真题演练）。<strong>不用再读课件 PDF。</strong></p>
-  <p><strong>每个知识块三步（约 25 min）：</strong></p>
+<div class="toc">
+  <strong>目录</strong>
   <ol>
-    <li><strong>读原理</strong>（10-15 min）：把那段“为什么会这样”的因果链读懂。</li>
-    <li><strong>合上书自己复述</strong>（5 min）：用自己的话把原理讲一遍（不是背表格、不是画图，就是顺一遍“因为…所以…”）。讲不顺的地方就是漏洞，翻回去再读。</li>
-    <li><strong>做该块“真题演练”</strong>（10 min）：三年真题逐条判 T/F、对官方答案，错的回到原理再看一眼。</li>
+    <li><a href="#s1">第1节 · 计算平台</a></li>
+    <li><a href="#s2">第2节 · 传感器与相机</a></li>
+    <li><a href="#s3">第3节 · 软件工程（分值最大）</a></li>
+    <li><a href="#s4">第4节 · 差速驱动运动学</a></li>
+    <li><a href="#s5">第5节 · 卡尔曼滤波</a></li>
+    <li><a href="#s6">第6节 · 控制/仿真/路径规划</a></li>
+    <li><a href="#s7">第7节 · 决策 FSM/BBR/ER/ANN</a></li>
+    <li><a href="#s8">第8节 · 机器人简史</a></li>
+    <li><a href="#quick">附录 · 考前30分钟速览</a></li>
+    <li><a href="#terms">缩写与术语总表（放最后备查）</a></li>
   </ol>
-  <div class="hint">
-    <strong>专治遗忘的关键：短时、高频、间隔。</strong>
-    记忆弱的人靠的不是“记得牢”，是“忘之前又见了一面”。宁可每天 30-40 min、一周 4 次，也不要一次 3 小时、一周一次。每次开始前，先花 5 分钟快过上一次学的块（滚动复习），再学新的。
-  </div>
-  <h3>总时间预估：约 18 小时</h3>
-  <div class="table-scroll">
-  <table>
-    <tr><th>项目</th><th>时长</th></tr>
-    <tr><td>通读+理解全部 8 个知识块原理（第一遍）</td><td>~5 h</td></tr>
-    <tr><td>三套真题：逐条对官方答案、弄懂每道错题</td><td>~3 h</td></tr>
-    <tr><td>滚动重复：自测原理 + 重做真题（多轮，专治遗忘）</td><td>~8 h</td></tr>
-    <tr><td>考前收尾（错题 + 附录速览 + 钓鱼清单）</td><td>~2 h</td></tr>
-  </table>
-  </div>
-  <p><strong>重点：记忆弱 ≠ 要更多总时长，而是把这 ~18h 拆成更多次、间隔开。</strong>真正决定及格的是那两个行为习惯（不留空、can 陷阱），不是学时。</p>
 </div>
 
+<!-- ============ 第1节 ============ -->
+<h2 id="s1">第 1 节 · 机器人的四种计算平台（★6月4题全错，L2）</h2>
+<div class="principle">
+  <p><strong>原理</strong>：机器人硬件排成一条“越硬 ↔ 越软”的光谱。<strong>越靠硬件、结构越死板 → 跑得越快、越省电、越能保证“准时”(实时)，但能做的越少、越难改；越靠软件、越灵活 → 能做的越多、越好改，但越难保证准时。</strong>从硬到软：PLD/FPGA → 微控制器 → CPU → GPU。</p>
+  <p><strong>这四个到底是什么</strong>（按课件 L2 原文展开）：</p>
+  <p>· <strong>PLD/FPGA 可编程逻辑器件</strong>：功能是在<strong>烧录 (flashing) 过程</strong>中加进去的，而且烧录改变的是<strong>芯片内部的实际硬件电路</strong>——不是“装了个程序”，而是把电路本身重新接线（这是它常被误解的地方）。支持输入/输出和程序循环。优点：<strong>执行极快、功耗极低</strong>（信号直接穿过硬件电路算出结果）；缺点：能实现的功能种类和规模都很受限。</p>
+  <p>· <strong>微控制器 (microcontroller)</strong>：功能同样靠烧录——但烧的是<strong>程序</strong>：写进只读存储器 (ROM)，<strong>设备一上电就自动开始执行</strong>，全程<strong>没有操作系统</strong>。芯片虽小，却支持相对高级的程序和硬件外设（例如 WiFi、磁盘存储）。优点：<strong>简单、低功耗、灵活的实时系统，硬件集成能力出众</strong>（直接操纵电机、传感器引脚）；缺点：程序功能和执行灵活性受限。<br>——什么叫<strong>实时 (real-time)</strong>：保证<strong>在规定时限内一定完成、执行时机可预测</strong>。微控制器能实时，正是因为没有 OS 来打断它。（记准：实时=准时可预测，跟“算得快不快”无关。）</p>
+  <p>· <strong>CPU 中央处理器</strong>：运行时由<strong>操作系统</strong>管理（就是一台“普通电脑”，比如 Linux 内核）；<strong>多个程序并行运行</strong>，内存 (RAM) 和磁盘存储之间持续交互，支持任意软件和工具链。优点：能跑高级软件、速度也不慢；缺点：<strong>无法保证实时</strong>（何时轮到你的程序由 OS 调度决定），因此和硬件直接打交道的能力受限。</p>
+  <p>· <strong>GPU 图形处理器</strong>：执行模型类似微控制器，但专为<strong>矩阵运算</strong>设计（本为图形而生——图像就是矩阵），有标准化接口（如 Vulkan）；<strong>必须配一个 CPU</strong> 负责内存管理和控制。优点：矩阵运算性能极高 → 计算机视觉 (CV) 和深度神经网络 (DNN)；缺点：CPU–GPU 接口让底层实现变复杂。</p>
+  <p>课程重点用的是 <strong>CPU 系统</strong>（你的电脑 + 树莓派）。</p>
+</div>
+<h3>真题演练（英文原题 → 官方答案｜讲解；⚠️ = 6月做错）</h3>
+<ul class="qlist">
+  <li><span class="badge year">26 Q4</span> <span class="en">"A programmable logic device is extremely fast in execution."</span> <span class="badge t">T</span> <span class="badge warn">⚠️</span><span class="zh">可重配电路、信号直穿 → 极快。</span></li>
+  <li><span class="badge year">26 Q5</span> <span class="en">"A microcontroller runs a very lean operating system (OS)."</span> <span class="badge f">F</span> <span class="badge warn">⚠️</span><span class="zh">微控制器直接在裸硬件上跑程序（这正是它能实时的原因）。</span></li>
+  <li><span class="badge year">26 Q6</span> <span class="en">"A microcontroller is capable of real-time execution."</span> <span class="badge t">T</span> <span class="badge warn">⚠️</span><span class="zh">裸机运行、执行时机可预测 → 实时。</span></li>
+  <li><span class="badge year">26 Q7</span> <span class="en">"A CPU is optimized to run one executable at a time."</span> <span class="badge f">F</span> <span class="badge warn">⚠️</span><span class="zh">CPU 配 OS 就是为同时跑多个程序。</span></li>
+</ul>
+
+<!-- ============ 第2节 ============ -->
+<h2 id="s2">第 2 节 · 传感器与相机（L5）</h2>
+<div class="principle">
+  <p><strong>测距传感器（课程实物就是 Kiwi 上这两颗，L4）</strong>：它们都是<strong>主动传感器</strong>——自己发出信号、接收反射回来的信号来算距离。<br>
+  · <strong>超声波 (ultrasonic)</strong>，课程用 Devantech SRF08：发出 <strong>40 kHz 声波脉冲</strong>、收回波，量程 <strong>3 cm – 6 m</strong>，内置微处理器、走 I²C 总线。<br>
+  · <strong>红外 (IR)</strong>，课程用 Sharp GP2Y0A41SK0F：发红外光、收反射光，量程只有 <strong>4 – 30 cm</strong>，输出是<strong>模拟电压</strong>，而且电压和距离是<strong>非线性</strong>关系（要换算才能得到距离读数）。<br>
+  两个考点由此而来：① 两者都有<strong>大于零的最小量程</strong>（贴到 0 距离测不了——回波/反射的几何路径在极近处失效）；② <strong>超声波（米级）远比红外（厘米级）量程长</strong>。</p>
+  <p><strong>相机的成像链（L5）</strong>：<strong>图像传感器 (image sensor) 是任何相机的核心部件</strong>（全球只有少数厂商生产）；相机 = 传感器芯片与使用者之间的接口。传感器分单通道 (mono) 和 RGB 两类。彩色是这么来的：传感器像素本身只感光强、不分颜色，所以在每个像素前盖一块红/绿/蓝滤光片，排成<strong>拜耳阵列 (Bayer pattern)</strong>——每 2×2 格 <strong>2 绿 1 红 1 蓝</strong>（人眼对绿光最敏感，绿色通道承担亮度细节，所以绿给双份）。每像素位深 8/10/12 bit。传感器直接输出的“拜耳图”还不是照片，要经过 <strong>ISP（图像信号处理）</strong>加工：<strong>去马赛克</strong>（把拜耳单层还原成 RGB 三通道）、<strong>白平衡</strong>、<strong>gamma 校正</strong>（补偿人眼的非线性感知）、<strong>tone mapping</strong>、<strong>降噪</strong>。几乎所有视觉算法和 ML/AI 工具用的都是 ISP 之后的数据。</p>
+  <p><strong>两种快门到底怎么工作</strong>（课件只点名对比，机制如下）：<br>
+  · <strong>卷帘快门 (rolling shutter)</strong>：像素<strong>一行一行</strong>依次开始曝光、依次读出——同一幅图里，<strong>每一行记录的是略微不同时刻的世界</strong>。好处：每个像素不需要额外电路，传感器<strong>便宜</strong>、读出<strong>快</strong>（帧率高）；代价：拍高速运动的物体时各行错位，图像歪斜、晃动（“果冻效应”）。<br>
+  · <strong>全局快门 (global shutter)</strong>：<strong>所有像素在同一瞬间开始、同一瞬间结束曝光</strong>，结果先存进每个像素旁边的存储单元、再统一读出。没有任何运动畸变；但每个像素要多一套存储电路 → <strong>更贵</strong>，读出通常也<strong>更慢</strong>。<br>
+  考点一句话：<strong>卷帘 = 快 + 便宜 + 会变形；全局 = 同一瞬间 + 贵 + 慢</strong>。</p>
+  <p><strong>标定（L5 的精确定义，别再记模糊了）</strong>：<br>
+  · <strong>内参标定 (intrinsic)</strong>：把<strong>图像像素坐标 (i, j)</strong> 变换到<strong>相机坐标 (x, y)</strong>——校正镜头光学畸变和相机自身特性（真实成像不可能落在完美矩形上；校正后每相邻像素间的角度增量相等）。用<strong>棋盘格</strong>标定（方格间距全部相等、已知）。<strong>只管相机自己</strong>。<br>
+  · <strong>外参标定 (extrinsic)</strong>：把相机坐标 (x, y) 变换到<strong>车体局部坐标 (X, Y)</strong>——取决于<strong>相机装在车上的位置和姿态</strong>；有了它才能<strong>把不同传感器的检测结果互相关联</strong>。若假设地面是平的，可用投影变换把每个像素直接投到地面上的 (X, Y)。车辆坐标系惯例：原点 = 前轴中心，X 朝前、Y 朝左。<br>
+  考点：“把相机和其他传感器联系起来”的是<strong>外参</strong>，不是内参。</p>
+  <p><strong>HSV vs RGB（L5）</strong>：HSV（色相-饱和度-明度）把图像的<strong>亮度信息 (luma)</strong> 和<strong>色彩信息 (chroma)</strong> 分开——<strong>颜色与亮度无关</strong>。所以光照变亮变暗时，按颜色过滤（如“找蓝色的锥桶”）依然稳定；直接在 RGB 里筛颜色，三个通道全都随光照一起变，很难写出稳的阈值。（OpenCV 里 H 用 0–180 而非 0–360。）</p>
+</div>
+<h3>真题演练</h3>
+<ul class="qlist">
+  <li><span class="badge year">26 Q8</span> <span class="en">"IR sensors have a minimum range larger than zero."</span> <span class="badge t">T</span><span class="zh">主动测距都有 &gt;0 的最小量程。</span></li>
+  <li><span class="badge year">26 Q9</span> <span class="en">"IR sensors have a longer range compared to ultrasonic sensors."</span> <span class="badge f">F</span><span class="zh">超声波更远。</span></li>
+  <li><span class="badge year">26 Q10</span> <span class="en">"A conventional RGB camera captures more light within the red wavelengths compared to blue and green."</span> <span class="badge f">F</span><span class="zh">拜耳阵列绿最多（2绿1红1蓝）。</span></li>
+  <li><span class="badge year">26 Q11</span> <span class="en">"A rolling shutter is faster compared to a global shutter."</span> <span class="badge t">T</span> <span class="badge warn">⚠️</span><span class="zh">卷帘逐行读出更快（全局快门更慢更贵）。</span></li>
+  <li><span class="badge year">26 Q12</span> <span class="en">"Intrinsic calibration of a camera relates it to other sensors on the robot."</span> <span class="badge f">F</span><span class="zh">联系其他传感器的是外参；内参只标定相机自身(焦距/畸变)。</span></li>
+</ul>
+
+<!-- ============ 第3节 ============ -->
+<h2 id="s3">第 3 节 · 软件工程：Docker/微服务/CI-CD/OTA/git/部署（★分值最大、6月错7题，L2/L3）</h2>
+<div class="principle">
+  <p><strong>原理（一行代码到机器人的完整链）</strong>：用 <strong>git</strong> 管<strong>源代码</strong>版本（可溯源）→ <strong>CI(持续集成)</strong> 每次提交自动构建并<strong>跑测试</strong>、产出验好的二进制 →（可带 <strong>HIL</strong> 真硬件测试）→ <strong>交叉编译 (cross-compilation)</strong> 在 amd64 服务器上编出 arm64 机器人能跑的程序 → 打成 <strong>Docker 容器</strong>（<code>docker run</code> 从镜像创建<strong>容器</strong>；机器人用体积小的 <strong>Alpine</strong>）→ 拆成<strong>各管一件事</strong>的微服务（共享统一协议，利于 OTA/CI-CD）→ <strong>OTA(空中升级)</strong> 把软件<strong>下发</strong>到机器人；数据回传 = 远程监控。</p>
+  <p><strong>容器为什么好（L2）</strong>：容器是“操作系统级虚拟化”——<strong>共享宿主机内核、只隔离应用环境</strong>，所以比虚拟机（每台都背一整套 OS + 内核）轻得多。三大好处：把二进制放进<strong>定义良好的隔离环境</strong>；<strong>跨平台可搬运</strong>；<strong>每个软件功能打成一个独立包 → 天然适合 OTA</strong>。构建链同样受益：源码进隔离的构建环境、构建逻辑也可搬运、还能装交叉编译工具（如 amd64 → arm）。</p>
+  <p><strong>上线之后的闭环（L2）</strong>：<strong>OTA</strong> 不只服务野外产品，也帮开发——把办公室拉近实物、给整个车队做版本管理；<strong>远程监控</strong>把野外数据传回后台，用 <strong>KPI</strong>（给整个机器人车队定义的量化指标）做正式评估，KPI 是 <strong>CE（持续实验）</strong>的使能器；CE 的典型做法：新版本先只发给一部分（如 20%）用户/机器人，数据证明更好再全量——Tesla 甚至在功能公开发布前先“静默”装上车、以 what-if 模式远程观察，每天约百万英里的数据。</p>
+  <p><strong>调参数用哪个工具（L5，Q31–33 的原理）</strong>：三个选择各有硬伤——<strong>仿真</strong>：结果通常不可复现、永远不够真实（运动和传感器）、解动力学方程算得慢；<strong>实机</strong>：不可复现、每次测试时间开销大；<strong>data replay（数据回放）</strong>：<strong>开环 → 结果完全可复现</strong>，同一段录像反复喂给感知算法调阈值，效率最高（课件案例的时间分配：50% 回放 / 20% 仿真 / 30% 实机）。但注意：回放是<strong>开环</strong>的——你的控制输出不会改变录像内容，所以<strong>调不了运动控制参数</strong>（那需要闭环反馈，用仿真或实机）。</p>
+  <p>⚠️ 两个反直觉但官方认定的点：<strong>微服务管的是部署/隔离/更新，算法选型是另一回事</strong>（所以“微服务让规划算法更容易”三年都是 F）；<strong>CPU 架构不同(ARM↔AMD64) 由交叉编译常规解决</strong>（所以“架构不同是普遍难点”为 F）。</p>
+</div>
+
+<h3>真题演练 · Dockerfile（多阶段构建）</h3>
+<ul class="qlist">
+  <li><span class="badge year">24 Q3 / 25 Q3</span> <span class="en">"The build tools installed ... are needed in the resulting Docker image."</span> <span class="badge f">F</span><span class="zh">build 工具只留在 builder 阶段；最终镜像只含编好的程序。</span></li>
+  <li><span class="badge year">24 Q4 / 25 Q4</span> <span class="en">"Every time a new Docker image is created ... the source code seems to be tested using pre-defined test cases."</span> <span class="badge t">T</span><span class="zh">构建时跑测试。</span></li>
+  <li><span class="badge year">24 Q2 / 25 Q2</span> <span class="en">"The word builder ... is user-specified." / "The second FROM ... will start over, creating a second Docker image."</span> <span class="badge t">T</span><span class="zh">builder 是自定义名；第二个 FROM 开启全新镜像。</span></li>
+  <li><span class="badge year">24 Q5 / 25 Q5</span> <span class="en">"Ubuntu lacks the package libstdc++, making it unable to run the compiled program."</span> <span class="badge f">F</span><span class="zh">编造的依赖说法。</span></li>
+  <li><span class="badge year">24 Q6 / 25 Q6</span> <span class="en">"Line 24 immediately runs the compiled program."</span> <span class="badge f">F</span><span class="zh">CMD 声明的是“容器启动时才执行的命令”（构建阶段只是记下来）。</span></li>
+  <li><span class="badge year">25 Q1</span> <span class="en">"RUN commands can be placed before the first FROM command."</span> <span class="badge f">F</span><span class="zh">RUN 必须在 FROM 之后。</span></li>
+  <li><span class="badge year">24 Q1</span> <span class="en">"Line 2 indicate what base image the resulting image will be based on."</span> <span class="badge f">F</span><span class="zh">多阶段里最终镜像基于第二个 FROM。</span></li>
+</ul>
+
+<h3>真题演练 · 镜像大小 / docker run / libcluon</h3>
+<ul class="qlist">
+  <li><span class="badge year">24 Q7 / 25 Q7 / 26 Q18</span> <span class="en">"Alpine images are in general smaller ... compared to Ubuntu."（24: T）/ "Ubuntu ... images are smaller than Alpine."（25: F）/ "Ubuntu-based images are recommended ... include more features."（26: F）</span><span class="zh">一句话：<strong>Alpine 小、机器人用 Alpine</strong>。</span></li>
+  <li><span class="badge year">24 Q9 / 25 Q9</span> <span class="en">"The command docker run spawns a Docker image."</span> <span class="badge f">F</span><span class="zh">run 产出容器，造镜像的是 docker build。</span></li>
+  <li><span class="badge year">26 Q20</span> <span class="en">"The command docker run creates a Docker container."</span> <span class="badge t">T</span> <span class="badge warn">⚠️</span><span class="zh">run 产出<strong>容器</strong>。</span></li>
+  <li><span class="badge year">26 Q28</span> <span class="en">"Small binaries are hard to achieve when cross-compiling."</span> <span class="badge f">F</span><span class="zh">交叉编译照样能产出小二进制。</span></li>
+  <li><span class="badge year">24 Q8 / 25 Q8 / 26 Q19</span> <span class="en">"libcluon is a library for transmitting data between running computer programs."</span> <span class="badge t">T</span><span class="zh">进程间通信库，三年都考。</span></li>
+</ul>
+
+<h3>真题演练 · 微服务</h3>
+<ul class="qlist">
+  <li><span class="badge year">24 Q10 / 25 Q10 / 26 Q21</span> <span class="en">"A set of microservices ... shares a common communication protocol."</span> <span class="badge t">T</span><span class="zh">统一协议。</span></li>
+  <li><span class="badge year">24 Q11 / 25 Q11</span> <span class="en">"A microservice should handle all the tasks needed for operating the robot."</span> <span class="badge f">F</span><span class="zh">一个服务只做一件事。</span></li>
+  <li><span class="badge year">26 Q22</span> <span class="en">"A microservice should handle a single task."</span> <span class="badge t">T</span><span class="zh">同上，正说版。</span></li>
+  <li><span class="badge year">24 Q12 / 25 Q12 / 26 Q23</span> <span class="en">"Microservices makes it easier to plan what algorithms should run in/on a robot."</span> <span class="badge f">F</span> <span class="badge warn">⚠️(26)</span><span class="zh"><strong>三年都是 F！</strong>微服务管的是部署/隔离/更新，算法选型另说。</span></li>
+  <li><span class="badge year">24 Q13 / 25 Q13 / 26 Q24</span> <span class="en">"Microservices makes it easier to work with OTA and CI/CD."</span> <span class="badge t">T</span> <span class="badge warn">⚠️(26)</span><span class="zh">小而独立 → 易单独更新。</span></li>
+  <li><span class="badge year">26 Q25</span> <span class="en">"A drawback of microservices is that they are likely to increase technical debt."</span> <span class="badge f">F</span><span class="zh">反而帮控复杂度。</span></li>
+  <li><span class="badge year">26 Q27</span> <span class="en">"Dependencies for a binary is a good way to increase software security."</span> <span class="badge f">F</span><span class="zh">依赖越多攻击面越大。</span></li>
+</ul>
+
+<h3>真题演练 · 交叉编译 / git / CI / OTA / SSH</h3>
+<ul class="qlist">
+  <li><span class="badge year">24 Q14</span> <span class="en">"Cross-compilation is useful since we can compile software in Alpine to work with Ubuntu."</span> <span class="badge f">F</span><span class="zh">交叉编译 = 跨 <strong>CPU 架构</strong>(amd64↔arm64)；此句说成“跨发行版(Alpine→Ubuntu)”故 F。</span></li>
+  <li><span class="badge year">25 Q14</span> <span class="en">"... compile software on one CPU type (e.g. amd64) to run on another (e.g. arm64)."</span> <span class="badge t">T</span><span class="zh">这才是定义。</span></li>
+  <li><span class="badge year">26 Q26</span> <span class="en">"Cross-compilation can be especially useful ... as an automated part of a CI/CD pipeline."</span> <span class="badge t">T</span></li>
+  <li><span class="badge year">26 Q29</span> <span class="en">"A general difficulty ... Raspberry Pi uses ARM64 while a GitLab server runs AMD64."</span> <span class="badge f">F</span><span class="zh">架构确实不同，但交叉编译是常规操作、能轻松跨过，所以“难点”说法为 F。（✓答对了）</span></li>
+  <li><span class="badge year">26 Q13</span> <span class="en">"Using git one can achieve traceability of <strong>binaries</strong> for robots."</span> <span class="badge f">F</span> <span class="badge warn">⚠️</span><span class="zh">git 管<strong>源码</strong>、不管二进制；二进制溯源靠 CI/CD（"can" 陷阱：能做到但属歪用 → F）。</span></li>
+  <li><span class="badge year">26 Q14</span> <span class="en">"GitLab and GitHub are examples of web-based frontends for git-based CI."</span> <span class="badge t">T</span></li>
+  <li><span class="badge year">26 Q15</span> <span class="en">"CI includes automated testing of binaries."</span> <span class="badge t">T</span> <span class="badge warn">⚠️</span><span class="zh">自动测试是 CI 核心。</span></li>
+  <li><span class="badge year">26 Q16</span> <span class="en">"HIL can be used as part of automated testing."</span> <span class="badge t">T</span> <span class="badge warn">⚠️</span><span class="zh">硬件在环可自动化。</span></li>
+  <li><span class="badge year">26 Q17</span> <span class="en">"OTA is the process of reading performance data from robots in the field."</span> <span class="badge f">F</span> <span class="badge warn">⚠️</span><span class="zh">OTA 是<strong>下发软件</strong>；读数据回来是监控。</span></li>
+  <li><span class="badge year">25 Q42</span> <span class="en">"There are at least three ways of getting a C++-based microservice to the Kiwi robot."</span> <span class="badge t">T</span><span class="zh">部署方式不止一种。</span></li>
+  <li><span class="badge year">25 Q43 / 26 Q30</span> <span class="en">"SSH is a tool for cross-compilation."（F）/ "SSH is a tool primarily used for software deployment."（F）</span> <span class="badge f">F</span><span class="zh">SSH 本职是<strong>远程登录操作</strong>。</span></li>
+</ul>
+
+<!-- ============ 第4节 ============ -->
+<h2 id="s4">第 4 节 · 差速驱动运动学（★唯一要推导，L4）</h2>
+<div class="principle">
+  <p><strong>先认符号</strong>：r = 轮子半径；<strong>R = 左右轮到车体中心的距离</strong>（半个轮距）；L = 瞬心(ICR)到车体中心的距离；V = 车体前进速度；v<sub>L</sub>/v<sub>R</sub> = 左/右轮线速度；<strong>φ̇（读“phi-dot”）= 偏航角速度 (yaw rate)</strong>，即车头朝向转动的快慢。</p>
+  <p><strong>原理</strong>：两轮转速不同 → 整车绕<strong>瞬时旋转中心 (ICR)</strong> 转，同一角速度 φ̇。ICR 距车体中心距离 L，则 v<sub>L</sub> = φ̇(L−R)、v<sub>R</sub> = φ̇(L+R)：<strong>相加 → V = (v<sub>R</sub>+v<sub>L</sub>)/2（无 R！）；相减 → φ̇ = (v<sub>R</sub>−v<sub>L</sub>)/(2R)（分母 2R！）</strong>。反解：v<sub>R</sub> = V + φ̇R。</p>
+  <p><strong>位姿 = 速度积分（L4 完整三件套）</strong>：把 V 分解成 V<sub>x</sub> = V·cosφ、V<sub>y</sub> = V·sinφ，再积分：<br>
+  x₁ = x₀ + ∫ (v<sub>R</sub>+v<sub>L</sub>)/2 · <strong>cos</strong>φ dt　｜　y₁ = y₀ + ∫ (v<sub>R</sub>+v<sub>L</sub>)/2 · <strong>sin</strong>φ dt　｜　φ₁ = φ₀ + ∫ (v<sub>R</sub>−v<sub>L</sub>)/(2R) dt<br>
+  <strong>x 配 cos、y 配 sin</strong>——出题人爱把它们对调来钓鱼。考场遇公式题就在草稿纸推一遍核对系数。</p>
+  <p><strong>运动学 vs 动力学（这条区分第 5 节要用）</strong>：运动学只回答“<strong>给定轮速</strong>，车的位姿怎么变”，<strong>不管这个运动是怎么被力产生的</strong>；动力学才考虑作用在车上的<strong>力和扭矩</strong>（电机转矩 τ、质量 M、转动惯量 I）。仿真里用动力学模型 + Euler 法逐时间步积分（先由转矩更新 V 和 φ̇，再更新 φ，最后更新位置）。</p>
+</div>
+<h3>真题演练</h3>
+<ul class="qlist">
+  <li><span class="badge year">24 Q15 / 25 Q15</span> <span class="en">"The forward speed is calculated as V = R(v_R+v_L)/2"</span> <span class="badge f">F</span><span class="zh">多了 R；正确 V=(v_R+v_L)/2。</span></li>
+  <li><span class="badge year">24 Q16 / 25 Q16</span> <span class="en">"The yaw rate is calculated as φ̇=(v_R−v_L)/R"</span> <span class="badge f">F</span><span class="zh">分母应是 <strong>2R</strong>。</span></li>
+  <li><span class="badge year">26 Q34</span> <span class="en">"It can be shown that v_R = V + φ̇R"</span> <span class="badge t">T</span><span class="zh">由 V、φ̇ 反解单轮速。</span></li>
+  <li><span class="badge year">26 Q35</span> <span class="en">"The yaw rate is calculated as φ̇=(v_R−v_L)/2R"</span> <span class="badge t">T</span><span class="zh">分母 2R，对。</span></li>
+  <li><span class="badge year">26 Q36</span> <span class="en">"x₁ = x₀ + ∫ (v_R+v_L)/2·cosφ dt"</span> <span class="badge t">T</span> <span class="badge warn">⚠️</span><span class="zh">位置 = 速度 Vx 的积分。</span></li>
+</ul>
+
+<!-- ============ 第5节 ============ -->
+<h2 id="s5">第 5 节 · 卡尔曼滤波（★含之前判错的 Q47，L8）</h2>
+<div class="principle">
+  <p><strong>原理（KF 讲义原文展开）</strong>：卡尔曼滤波把“<strong>把多个数据来源合并</strong>”这件事写成了数学公式，被称为<strong>最优估计器 (optimal estimator)</strong>。它每个时间步跑两步、顺序固定：<strong>① Predict</strong>——用 process model 从上一时刻的状态<strong>预测</strong>当前状态；<strong>② Update</strong>——用传感器读数（经 observation model）估计预测的<strong>偏差</strong>，把预测修正过来。它天生善于处理<strong>不同更新频率</strong>的数据（传感器没来新数据时靠模型顶上），也善于压<strong>噪声</strong>——所以“传感器频率太低/噪声太大时常用 KF”都是 T。</p>
+  <p><strong>两个模型的精确定义（讲义原话）</strong>：<strong>process model 描述“状态如何从上一步转移到下一步”</strong>（可含控制输入；讲义特别点名：“这里的好例子就是差速驱动的运动学模型”）；<strong>observation model 描述“传感器读数与状态变量如何对应”</strong>（含标定信息：比例缩放、去偏置）。所以“两个模型都是在建模传感器”= F——process model 建的是运动。</p>
+  <p><strong>Kalman gain</strong>：噪声本身不可预测，但可以在“上一步的估计”和“当前的观测”之间做<strong>信任权衡</strong>——gain 就是这个权重（讲义：“gain 装着系统对每个观测的信任度”）。它不能提高传感器频率（那是整个滤波器的效果，不是 gain 的职责）。</p>
+  <p><strong>在线递归</strong>：滤波器<strong>可以在机器人运行时全程在线跑，也可以跑事先录好的数据</strong>——两者都行，所以“KF 需要录制数据、不能上机器人”= F。</p>
+  <p><strong>线性化（关键考点）</strong>：标准 KF <strong>假设 process 和 observation 模型都是线性的</strong>（变量间只有加减和成比例）。模型非线性时用 <strong>EKF</strong>：在当前状态点附近<strong>用雅可比矩阵 (Jacobian) 估计模型的局部导数</strong>（“模型对状态的小变化如何响应”），拿这个局部线性近似继续跑 KF 框架。对差速驱动：<strong>轮速 ↔ V、φ̇ 的运动学关系是线性的 → 标准 KF 可用</strong>；但状态向量取 <strong>[x, y, φ]</strong> 时，位置更新出现 <strong>cosφ、sinφ</strong>（“弯”的关系）→ <strong>非线性 → 要 EKF</strong>；<strong>动力学模型</strong>（含力/扭矩）同样非线性 → EKF。</p>
+  <p><strong>它俩的用武之地（L8）</strong>：<strong>传感器融合</strong>——GNSS 偶尔给一个全局参照（噪声大、频率低），轮编码器/IMU 在两次 GNSS 之间跟踪运动，内部（process）模型负责去噪，KF 把三者合并。<strong>SLAM</strong>——把 GNSS 也去掉，靠<strong>反复观测到的路标</strong>同时定位+建图（EKF-SLAM 的状态向量除 [x,y,φ] 外还装着每个路标的坐标，大小 3+2n 随发现的路标增多而变大；重看到一个路标出现在“它该在的位置”，不确定度就下降）。</p>
+</div>
+<h3>真题演练</h3>
+<ul class="qlist">
+  <li><span class="badge year">24 Q21 / 25 Q21 / 26 Q42</span> <span class="en">"A Kalman filter is often used when sensors have too low update frequency."</span> <span class="badge t">T</span></li>
+  <li><span class="badge year">24 Q23 / 25 Q23</span> <span class="en">"... when sensors are noisy."</span> <span class="badge t">T</span></li>
+  <li><span class="badge year">24 Q26 / 25 Q26</span> <span class="en">"A Kalman filter can be used for localization of a robot."</span> <span class="badge t">T</span></li>
+  <li><span class="badge year">24 Q22</span> <span class="en">"... when there is no good model of the robot motion."</span> <span class="badge t">T/F 均判对</span><span class="zh">考官声明两个答案都接受。</span></li>
+  <li><span class="badge year">25 Q22 / 26 Q43</span> <span class="en">"A Kalman filter can not be used in a robot, since it requires recorded data."</span> <span class="badge f">F</span><span class="zh">KF 在线递归、边跑边算即可（照样能上机器人）。</span></li>
+  <li><span class="badge year">24 Q24 / 25 Q24 / 26 Q45</span> <span class="en">"The process model and observation model are two ways of modelling the sensors."</span> <span class="badge f">F</span><span class="zh">process model 建的是<strong>运动</strong>。</span></li>
+  <li><span class="badge year">24 Q25 / 25 Q25 / 26 Q46</span> <span class="en">"The Kalman gain is used to increase the frequency of sensors."</span> <span class="badge f">F</span><span class="zh">gain 是信任权重。</span></li>
+  <li><span class="badge year">26 Q44</span> <span class="en">"A Kalman filter first runs the step Update and then the step Predict."</span> <span class="badge f">F</span><span class="zh">先 Predict 后 Update。</span></li>
+  <li><span class="badge year">26 Q47</span> <span class="en">"The standard Kalman filter works well with the <strong>kinematic model</strong> of the differentially steered robot."</span> <span class="badge t">T</span><span class="zh">运动学关系是线性的。（✓答对了）</span></li>
+  <li><span class="badge year">26 Q48</span> <span class="en">"... works well with the <strong>dynamic model</strong> ..."</span> <span class="badge f">F</span><span class="zh">动力学模型要用 EKF（标准 KF 只吃线性）。</span></li>
+  <li><span class="badge year">26 Q49</span> <span class="en">"... works well with the <strong>state vector [x, y, φ]</strong>."</span> <span class="badge f">F</span><span class="zh">含 φ 的位置更新非线性 → 需 EKF。</span></li>
+</ul>
+
+<!-- ============ 第6节 ============ -->
+<h2 id="s6">第 6 节 · 控制/转向/PID + 仿真 + 路径规划（L6）</h2>
+<div class="principle">
+  <p><strong>横向 vs 纵向（L6）</strong>：<strong>纵向控制</strong> = 沿 X 轴（车头方向）的局部速度调节；<strong>横向控制</strong> = 转向、保持在路上。导航拆成三个概念：<strong>定位</strong>（在地图里找到自己）→ <strong>路径规划</strong>（找一条从当前位置到目标的高效路径，全局）→ <strong>路径跟随</strong>（施加控制沿路走，局部）。</p>
+  <p><strong>三个转向模型（都来自“人怎么开车”的研究，Kondo 1950s 起）</strong>：<br>
+  · <strong>瞄点模型 (aim point)</strong>：盯住前方<strong>一个</strong>目标点，控制律 δ = k·ε（ε 是望向该点的角度误差）——<strong>只有 1 个可调参数 k</strong>。<br>
+  · <strong>预瞄模型 (preview)</strong>：沿前方路径取<strong>一串</strong>预瞄点综合决定转向（最著名的模型用 <strong>8 个点</strong>）→ 参数自然更多。所以“瞄点参数比预瞄少”= T，“瞄点有两个可调参数”= F。<br>
+  · <strong>两点模型 (two-point, Salvucci &amp; Gray 2004)</strong>：模仿人眼——<strong>远点</strong>是注视点（位置随情境变化），负责<strong>监测横向稳定性、预判前方道路曲率</strong>；<strong>近点</strong>在眼前的道路中心，用<strong>余光</strong>（不注视）监测当前横向位置。<strong>输出是转向速率 (rate)</strong>：只有当近点/远点在视野中<strong>动起来</strong>、或近点不在正前方时，才转动方向盘——课件的金句：“转向不是在移动车辆，而是在移动<strong>感知到的世界</strong>”。</p>
+  <p><strong>PID 与 rate limiter</strong>：课件原话“大多数场合 PID 完全够用”。P 按当前误差纠偏（主力）、I 累积历史误差消除稳态偏差、<strong>D 按误差变化率提供阻尼 → 抑制振荡</strong>；转向靠 P 和 D，I 不是主角。<strong>rate limiter（限速率器）</strong>限制控制输出的变化速度：视觉感知是逐帧的、会跳变（检测忽有忽无、位置抖动），直接驱动转向会让车“抽搐”——限速率器把突变削平滑。</p>
+  <p><strong>模块化仿真（L4 的原理，一句话就懂）</strong>：微服务<strong>不知道数据从哪来，只关心消息的类型和内容</strong>——所以任何一个微服务都可以被换成仿真件（虚拟相机、虚拟轮编码器、虚拟车体……与 data replay 是同一个原理），甚至<strong>一部分仿真、一部分实物混着跑</strong>。这就是它与微服务架构天然契合、SIL/HIL 都容易做的原因。对照<strong>单体仿真</strong>（Gazebo、AirSim 这类独立世界）：要整个另建一套，还容易掉进“仿真优化的兔子洞”（无止境地调仿真本身）。</p>
+  <p><strong>路径规划（L6）</strong>：<strong>Dijkstra</strong>——从起点出发反复做两件事：把当前节点的所有未访问邻居“松弛”（发现更短路径就更新它的距离、记下前驱），然后在所有未访问节点里挑距离最小的作为下一个当前节点；保证最短路，但要摸遍大量节点 → 基础、慢。<strong>A* = Dijkstra + 启发式</strong>（对“到终点还有多远”的估计，优先探索有希望的方向）→ 常用、快。<strong>D* Lite</strong> 适合真实世界（环境变化时增量重规划）。它们都是<strong>找路</strong>的，不管速度控制。</p>
+</div>
+<h3>真题演练 · 控制/转向</h3>
+<ul class="qlist">
+  <li><span class="badge year">25 Q18</span> <span class="en">"In a PID controller, the D part is resisting oscillations."</span> <span class="badge t">T</span><span class="zh">D = 阻尼抑振。</span></li>
+  <li><span class="badge year">26 Q38</span> <span class="en">"For a PID controller, the I part is the most important component when steering a robot."</span> <span class="badge f">F</span><span class="zh">转向主力是 P 和 D。</span></li>
+  <li><span class="badge year">25 Q19 / 26 Q39</span> <span class="en">"A rate limiter is important/useful when working with vision-based perception."</span> <span class="badge t">T</span> <span class="badge warn">⚠️(26)</span><span class="zh">视觉会跳变，限速率平滑。</span></li>
+  <li><span class="badge year">24 Q20 / 25 Q20 / 26 Q40</span> <span class="en">"The two-point model uses a near and a far point, where the output is given as control rate."</span> <span class="badge t">T</span><span class="zh">三年原句。</span></li>
+  <li><span class="badge year">24 Q19 / 26 Q41</span> <span class="en">"The aim point model has fewer parameters than the preview model."（24: T）/ "The aim point model contains two tunable parameters."（26: F）</span><span class="zh">瞄点参数比预瞄<strong>更少</strong>；26 句说“两个”故 F。</span></li>
+</ul>
+<h3>真题演练 · 仿真</h3>
+<ul class="qlist">
+  <li><span class="badge year">24 Q17 / 25 Q17</span> <span class="en">"Modular simulation works poorly for a microservice architecture."</span> <span class="badge f">F</span><span class="zh">模块化仿真与微服务天然契合（仿真器本身就是个微服务）。</span></li>
+  <li><span class="badge year">24 Q18</span> <span class="en">"Modular simulation is a good complement when running hardware-in-the-loop tests."</span> <span class="badge t">T</span></li>
+  <li><span class="badge year">26 Q37</span> <span class="en">"Modular simulation makes SIL more challenging, compared to monolithic simulation."</span> <span class="badge f">F</span><span class="zh">模块化仿真让 SIL 更容易。</span></li>
+</ul>
+<h3>真题演练 · 路径规划（仅 2025，Q38/Q39 需按所给图追踪）</h3>
+<ul class="qlist">
+  <li><span class="badge year">25 Q38</span> <span class="en">"When running Dijkstra ... (A to H), the distance to H is updated twice."</span> <span class="badge t">T</span><span class="zh">按图追踪：H 距离被更新 2 次。</span></li>
+  <li><span class="badge year">25 Q39</span> <span class="en">"... all nodes except one needs to be visited."</span> <span class="badge f">F</span></li>
+  <li><span class="badge year">25 Q40</span> <span class="en">"Dijkstra's algorithm is the most efficient algorithm for finding the shortest distance for a robot."</span> <span class="badge f">F</span><span class="zh">A* 更快。</span></li>
+  <li><span class="badge year">25 Q41</span> <span class="en">"Dijkstra's algorithm is often used when controlling the speed of a robot."</span> <span class="badge f">F</span><span class="zh">它是<strong>路径规划</strong>。</span></li>
+</ul>
+
+<!-- ============ 第7节 ============ -->
+<h2 id="s7">第 7 节 · 决策：FSM / BBR / 符号AI / 进化机器人 / ANN（★6月错3题，L7）</h2>
+<div class="principle">
+  <p><strong>三种范式</strong>：<strong>符号 AI (Symbolic AI)</strong>——集中式、功能分解、分清晰的数据处理阶段（感知→建模→规划→执行），先把世界建成模型再在模型上推理规划。<strong>BBR</strong>——去中心：一堆<strong>原子行为 (atomic behaviours，最小的“感知→动作”单元，如“避障”“趋光”)</strong> 各自<strong>并行</strong>跑（可同时激活），整体智能靠<strong>涌现 (emergence，简单部件相互作用后冒出没被单独编程的复杂整体行为)</strong>，灵感来自<strong>动物行为学 (ethology)</strong>；<strong>行为的选择与协调是核心难题</strong>——课件原话：“行为建模归根结底就是简单孤立组件的协调与调参”，所以“behaviour selection is trivial”= F。<strong>进化/具身机器人 (ER)</strong>——具身智能主张“智能只能相对于一个物理身体、在情境化的行为中讨论”；行为靠进化自然长出，<strong>没有预定义的行为或数据处理阶段</strong>。</p>
+  <p><strong>FSM（L7 定义）</strong>：由<strong>离散逻辑状态</strong>组成的图；每个状态 = 一个具体的孤立行为（如漫游、左转）；<strong>特定条件</strong>（如刺激超过阈值）触发到另一状态的<strong>转移</strong>；FSM 本身不强加任何行为层级。可以实现为<strong>作用在全局变量上的一组 if 语句</strong>。参数（阈值等）由人工设定——“FSM 自动调参”= F。</p>
+  <p><strong>包容架构 (subsumption architecture，L7 原文)</strong>：一种<strong>反应式</strong>行为架构——行为<strong>按层级排序</strong>；每个行为有自己的<strong>激活条件</strong>、非激活即休眠；各行为<strong>并行运行</strong>，但<strong>高层行为激活时会抑制 (suppress) 低层行为的输出</strong>；<strong>模块化：新行为可以直接叠在既有行为之上</strong>（增量扩展）；激活条件的调参决定整体表现。每个行为内部就可以是一个 FSM——课件例子：“逃离 (Escape)”行为 = 4 状态 FSM（等待碰撞→右转→倒车→左转，靠碰撞方向和超时触发转移）→ 所以“subsumption 可由一组 FSM 搭出来”= T。</p>
+  <p><strong>Braitenberg 车（1984）</strong>：传感器<strong>直连</strong>电机的纯连线映射——“决策”被还原成一个传感器→执行器映射，<strong>映射本身就是行为</strong>（没有内部状态，所以“Braitenberg 是 FSM”= F）。在有多个刺激源的复杂环境里，它会表现出看似智能的复杂动态行为。教训是原书那句名言：<strong>“从行为的观察反推内部结构，比先造出产生该行为的结构要难得多”</strong>——造易析难，所以“简单原子行为导致容易解释的整体行为”= F。</p>
+  <p><strong>进化怎么“长”出行为（L7 GA 流程）</strong>：随机生成初始种群 → 把每条染色体<strong>解码成一个行为模型</strong> → 放进环境里实际跑、评估 → 打<strong>适应度 (fitness)</strong> 分 → 选优 + 交叉/变异产生下一代。优点：能处理<strong>不可微</strong>的目标函数、没有完整数学模型的优化问题（如仿真或 HIL 里评估），靠并行搜索对付多局部最优。</p>
+  <p><strong>ANN（L7）</strong>：全连接网络是“更一般的输入→输出映射”、一块行为的白板结构——能同时容纳<strong>许多并行、混合的行为</strong>；调的是每个神经元的<strong>权重 + 偏置</strong>（y = φ(w·x+b)），激活函数（如 sigmoid）把输入输出压在 [0,1]。<strong>足够大的全连接 ANN 能拟合任意输入→输出映射（万能逼近）</strong>——考试为 T。</p>
+</div>
+<h3>真题演练 · FSM</h3>
+<ul class="qlist">
+  <li><span class="badge year">24 Q27 / 25 Q27 / 26 Q50</span> <span class="en">"A finite-state machine (FSM) is used to describe the transitions between behaviours."</span> <span class="badge t">T</span></li>
+  <li><span class="badge year">24 Q28 / 25 Q28 / 26 Q51</span> <span class="en">"An FSM is often a set of if-statements." / "An FSM can be implemented as if-statements acting on globally available variables."</span> <span class="badge t">T</span></li>
+  <li><span class="badge year">24 Q29 / 25 Q29</span> <span class="en">"An FSM automatically tunes its own parameters."</span> <span class="badge f">F</span><span class="zh">FSM 参数由人工设定（此句说它自动调参故 F）。</span></li>
+</ul>
+<h3>真题演练 · BBR / Braitenberg</h3>
+<ul class="qlist">
+  <li><span class="badge year">24 Q30 / 25 Q30 / 26 Q53</span> <span class="en">"Behaviour-based robotics (BBR) is inspired from human psychology."</span> <span class="badge f">F</span><span class="zh">源自<strong>动物行为学 ethology</strong>。</span></li>
+  <li><span class="badge year">24 Q31 / 26 Q56</span> <span class="en">"BBR can be modelled from an FSM." / "A Subsumption architecture can be modelled from a set of FSMs."</span> <span class="badge t">T</span> <span class="badge warn">⚠️(26 Q56)</span><span class="zh">都能由 FSM 搭。</span></li>
+  <li><span class="badge year">24 Q32 / 25 Q32 / 26 Q54</span> <span class="en">"BBR uses atomic behaviours as building blocks."</span> <span class="badge t">T</span></li>
+  <li><span class="badge year">24 Q33</span> <span class="en">"BBR is a method for decision making."</span> <span class="badge t">T</span></li>
+  <li><span class="badge year">25 Q36</span> <span class="en">"In BBR, a set of isolated robotic behaviours run in sequence."</span> <span class="badge f">F</span><span class="zh">是<strong>并行</strong>。</span></li>
+  <li><span class="badge year">26 Q55</span> <span class="en">"In BBR, behaviour selection is trivial."</span> <span class="badge f">F</span><span class="zh">行为协调是核心难题。</span></li>
+  <li><span class="badge year">26 Q52</span> <span class="en">"Breitenberg vehicles are implemented as simple FSMs."</span> <span class="badge f">F</span><span class="zh">Braitenberg = 传感器直连电机的纯连线映射（此句说它是 FSM 故 F）。</span></li>
+  <li><span class="badge year">25 Q33 / 26 Q57</span> <span class="en">"Breitenberg vehicles show us that simple atomic behaviours result in easily explainable overall behaviours."</span> <span class="badge f">F</span> <span class="badge warn">⚠️(26)</span><span class="zh">教训是“造易析难”：行为看着复杂、从外部难反推（此句说“容易解释”故 F）。</span></li>
+</ul>
+<h3>真题演练 · 符号AI / 进化 / ANN</h3>
+<ul class="qlist">
+  <li><span class="badge year">25 Q34 / 26 Q58</span> <span class="en">"In Symbolic AI, intelligence is decomposed into functional modules with <strong>no</strong> clearly defined data processing stages."</span> <span class="badge f">F</span><span class="zh">符号 AI 恰恰<strong>有</strong>清晰阶段，“no”说反。</span></li>
+  <li><span class="badge year">25 Q35 / 26 Q59</span> <span class="en">"In evolutionary/embodied robotics, there are no clearly defined behaviours or data processing stages."</span> <span class="badge t">T</span></li>
+  <li><span class="badge year">25 Q37 / 26 Q60</span> <span class="en">"A fully connected ANN with X hidden layers can achieve any mapping between inputs and outputs."</span> <span class="badge t">T</span> <span class="badge warn">⚠️(26)</span><span class="zh">万能逼近。</span></li>
+</ul>
+
+<!-- ============ 第8节 ============ -->
+<h2 id="s8">第 8 节 · 机器人简史（★6月错2题，含之前判错的 Q2，L1）</h2>
+<div class="principle">
+  <p><strong>原理 · 四位先驱（L1 细节版）</strong>：<br>
+  · <strong>乌龟 Tortoise</strong>（W. Grey Walter, 1948–49）：<strong>第一批电子自主机器人</strong>。造它的目的就是证明“少量‘脑细胞’之间的丰富连接可以产生非常复杂的行为”——即<strong>涌现 (emergence)</strong>。会<strong>趋光 (phototaxis)</strong>：电量低时能自己找到充电站。全部用<strong>模拟电路</strong>实现——微控制器 1971 年才发明，晚了 23 年，所以“乌龟以首用微控制器闻名”= F。<br>
+  · <strong>斯坦福小车 Stanford Cart</strong>（1960–80，三阶段）：1960–63 为遥操作登月任务研究视频遥控；1964–71 在受控光照下沿高对比白线低速自动行驶；1971–80 用 TV 相机做视觉导航、在实验室缓慢绕障。<br>
+  · <strong>Shakey</strong>（SRI 斯坦福研究院, Nils Nilsson 等, 1966–72）：<strong>第一台能对自身行动进行推理的通用移动机器人</strong>；还能做自然语言处理——把书面命令拆解成基本任务。对机器人学和 AI 影响巨大：<strong>A* 搜索算法、Hough 变换都出自这个项目</strong>。它和 Kiwi 一样是带相机+测距传感器的轮式移动机器人（26 Q2 说“物理构成相似”= T）。<br>
+  · <strong>Braitenberg 车</strong>（1984，Valentino Braitenberg 的书）：传感器直连电机、简单结构生出复杂行为（详见第 7 节）。</p>
+  <p><strong>原理 · 炒作 vs 落地（L1 年表）</strong>：<strong>80s</strong> 个人陪伴机器人炒作 → <strong>90s</strong> 深度神经网络炒作 + 个人工作机器人炒作 → <strong>00s</strong> 第一波人形机器人（ASIMO 惊艳大众；后来演化出更实用的 Boston Dynamics 机器狗）→ <strong>10s</strong> 自动驾驶 + 机器学习炒作 → <strong>20s</strong> LLM“AI”炒作 + 第二波人形炒作。<strong>真正商业落地的是解决实际问题的朴素产品：Husqvarna 的割草机器人、iRobot 的 Roomba 扫地机</strong>——所以“个人机器人在 90 年代真正起飞了”= F（只是炒作）。</p>
+</div>
+<h3>真题演练</h3>
+<ul class="qlist">
+  <li><span class="badge year">26 Q1</span> <span class="en">"The Tortoise is famous for being first with using a microcontroller."</span> <span class="badge f">F</span><span class="zh">用模拟电路；微控制器 1971 才有（晚 23 年）。</span></li>
+  <li><span class="badge year">26 Q2</span> <span class="en">"Shakey was a robot with clear physical similarities to the Kiwi D2 robot."</span> <span class="badge t">T</span> <span class="badge warn">⚠️</span><span class="zh">两者都是<strong>带摄像头+测距传感器的轮式移动机器人</strong>，物理构成相似。（记：看“轮式+载摄像头”这个共性）</span></li>
+  <li><span class="badge year">26 Q3</span> <span class="en">"So called personal robots was a concept that really took off in the 90s."</span> <span class="badge f">F</span> <span class="badge warn">⚠️</span><span class="zh">80/90 年代只是<strong>炒作</strong>、没真正普及。</span></li>
+</ul>
+
+<!-- ============ 附录 ============ -->
+<h2 id="quick">附录 · 考前 30 分钟速览（按错题优先级）</h2>
 <div class="card">
-  <h2>二、必背「钓鱼题」清单（历年反复挖的坑）</h2>
-  <p>记<strong>事实</strong>，不记句子。出题人每年把同一事实换措辞或反着说来钓鱼，下面每条写的都是“正确的事实本身”。</p>
-  <ul>
-    <li>φ̇ = (v<sub>R</sub> − v<sub>L</sub>) / <strong>2R</strong> —— 分母是 2R 不是 R；V = (v<sub>R</sub> + v<sub>L</sub>)/2 —— <strong>没有</strong> R</li>
-    <li><code>docker run</code> 创建并运行的是 <strong>container</strong>，不是 image</li>
-    <li>Alpine 镜像比 Ubuntu <strong>小</strong>（两个方向都考过）</li>
-    <li>多阶段构建：build 工具只在 builder 阶段，<strong>不进最终镜像</strong>；测试在 build 时跑</li>
-    <li>libcluon = 进程间通信库（三年都考，是对的）</li>
-    <li>微服务：<strong>一个服务只做一件事</strong>；统一通信协议；方便 OTA 和 CI/CD</li>
-    <li>Kalman：<strong>process model 描述运动</strong>，不是“另一种传感器模型”；Kalman gain 是权衡模型/观测的信任度，<strong>不能提高传感器频率</strong>；KF 可以在线跑，<strong>不需要</strong>录好的数据；先 Predict 后 Update</li>
-    <li>轮速↔V/φ̇ 的<strong>运动学关系是线性的 → 标准 KF 可用</strong>；但状态向量取 [x, y, φ]（含朝向角）时位置更新含 cos/sinφ <strong>非线性 → 要 EKF</strong>（动力学模型同理）</li>
-    <li>FSM 描述行为间转移（对）；FSM <strong>不会</strong>自动调参（错）；Braitenberg 车 ≠ FSM</li>
-    <li>BBR 灵感来自<strong>动物行为学 ethology</strong>，不是心理学 psychology</li>
-    <li>Subsumption：高层<strong>抑制</strong>低层输出、并行、可增量扩展</li>
-    <li>交叉编译：在 amd64 (GitLab CI) 上编出 arm64 (RPi/Kiwi) 的二进制；SSH ≠ 交叉编译</li>
-    <li>视觉参数<strong>不要硬编码</strong>；调<strong>感知</strong>参数用 data replay 最高效，调<strong>运动控制</strong>用实物/仿真</li>
-    <li>Two-point 转向模型：near point + far point，输出是<strong>转向速率</strong>（三年原句必考）</li>
-    <li>PID：D 项抑制振荡；转向控制里 I 项<strong>不是</strong>最重要的</li>
-    <li>相机：Bayer 阵列<strong>绿色最多</strong>；rolling vs global shutter；intrinsic（像素→相机坐标）vs extrinsic（相机→车身）</li>
-    <li>2026 新增：Walter 的 Tortoise、Shakey；PLD/FPGA 极快低功耗、微控制器<strong>无操作系统</strong>但实时性强、CPU 实时性受限；OTA = 远程<strong>部署软件</strong>（不是“读回性能数据”）</li>
-  </ul>
+<ol>
+  <li><strong>软件工程链（错最多）</strong>：git 管源码、二进制溯源靠 CI-CD；CI <strong>含自动测试</strong>；HIL 可进自动测试；交叉编译 = 跨 CPU(amd64→arm64)、常规操作能跨过架构差异；<code>docker run</code> 创建<strong>容器</strong>、用小 <strong>Alpine</strong>；微服务共享协议、利于 OTA-CICD，管的是部署/隔离（“规划算法”三年 F）；<strong>OTA = 下发软件</strong>（数据回传 = 监控）。</li>
+  <li><strong>计算硬件</strong>：PLD 可重配电路最快｜微控制器<strong>裸机运行 → 实时</strong>｜CPU 跑 OS 多任务但实时差｜GPU 管矩阵/视觉。</li>
+  <li><strong>运动学</strong>：V=(v<sub>R</sub>+v<sub>L</sub>)/2（无 R）、φ̇=(v<sub>R</sub>−v<sub>L</sub>)/2R（分母 2R）、位置 = 速度积分；v<sub>R</sub>=V+φ̇R。</li>
+  <li><strong>卡尔曼</strong>：先 Predict 后 Update；process = 运动、observation = 传感器；gain = 信任权重不提频率；<strong>运动学模型线性 → 标准 KF 可用</strong>，含 φ 的位置 [x,y,φ]/动力学非线性 → 用 EKF。</li>
+  <li><strong>决策</strong>：符号 AI 分阶段｜BBR 并行涌现、源自动物行为学、选择不简单、可由 FSM/subsumption 搭、Braitenberg <strong>不易解释</strong>｜进化机器人无预定义阶段｜<strong>大 ANN = 万能逼近</strong>。</li>
+  <li><strong>控制</strong>：两点模型近+远点、输出<strong>速率</strong>；D 抑振；rate limiter 平滑视觉；瞄点参数<strong>少</strong>（非两个）；模块化仿真契合微服务、让 SIL 更易。</li>
+  <li><strong>传感器</strong>：超声波比 IR 远；Bayer <strong>绿最多</strong>；卷帘快门<strong>更快</strong>；内参管相机自身、外参连其他传感器。</li>
+  <li><strong>历史</strong>：乌龟 = 模拟电路证涌现；Shakey 会推理、<strong>与 Kiwi 同为轮式载相机机器人（相似 = T）</strong>；个人机器人 90s 只是炒作没普及。</li>
+  <li><strong>考试策略</strong>：答错不扣分，<strong>懂原理有把握就标 TRUE，绝不留空</strong>（上次 12 分丢在留空）；看到 <code>can</code> 先问“要成立是不是得干件蠢事？是 → FALSE”。</li>
+</ol>
 </div>
 
-<div class="card">
-  <h2>三、日程（到 8月25日，节奏 = 每次 30-40 min、每周 3-4 次）</h2>
-  <p>摸底已完成（40/60）。按“先学 → 通关 → 保持”三段走。<strong>日期是弹性的，核心是保证次数和间隔</strong>，别攒到一起。</p>
 
-  <h3>阶段 A · 学习（7月上中旬，约 2-3 周，8h）— 按优先级过完 8 块</h3>
-  <p>每次挑一块，走“读原理 → 合书自己复述 → 做该块真题演练”。顺序按薄弱 + 分值：</p>
-  <ol>
-    <li><strong>软件工程</strong>（错最多、分值最大）：Docker/镜像容器、多阶段构建、微服务、CI-CD/OTA/git、交叉编译、SSH</li>
-    <li><strong>计算硬件</strong>（4 题全错）：PLD / 微控制器(裸机→实时) / CPU / GPU</li>
-    <li><strong>决策</strong> FSM/BBR/Braitenberg/符号AI/进化/ANN</li>
-    <li><strong>Kalman</strong>：Predict→Update、两模型、gain、线性→标准KF / 含 φ 非线性→EKF</li>
-    <li><strong>运动学</strong>：草稿纸推 V=(v_R+v_L)/2、φ̇=(v_R−v_L)/2R、位置=速度积分</li>
-    <li><strong>传感器 / 历史 / 控制转向 / 仿真 / Dijkstra</strong>（较轻，一起过）</li>
-  </ol>
-  <p>每次开头先花 5 分钟快过上一次学的块（滚动复习）。</p>
+<!-- ============ 术语表 ============ -->
+<h2 id="terms">缩写与术语总表（中英对照，记不住名词就翻这里）</h2>
+<p>每一条 = <strong>缩写｜英文全称（这才是记忆的锚）｜中文｜一句话它到底是什么</strong>。缩写记不住，是因为只记了三个字母、没记“它是哪几个词的头字母”。把<strong>全称</strong>读几遍，缩写自然就有意义了。</p>
 
-  <h3>阶段 B · 通关（7月下旬，约 1 周，3h）— 三套真题</h3>
-  <ul>
-    <li>完整重做 <strong>2024 → 2025 → 2026</strong> 三套（计时约 30 min/套），逐条对官方答案。</li>
-    <li>错题一律回手册对应块看原理，不要只记答案。</li>
-    <li>目标：2026 卷稳定 <strong>50+/60</strong>。</li>
-  </ul>
+<h3>计算硬件</h3>
+<dl class="terms">
+  <dt>PLD ｜ Programmable Logic Device ｜ 可编程逻辑器件</dt>
+  <dd>一片能被重新配置成任意专用<strong>电路</strong>的芯片（它是硬件电路，常被误当成小电脑）。极快、省电。</dd>
+  <dt>FPGA ｜ Field-Programmable Gate Array ｜ 现场可编程门阵列</dt>
+  <dd>PLD 的一种，“门阵列”= 一大片逻辑门任你连线。和 PLD 当同义词记即可。</dd>
+  <dt>CPU ｜ Central Processing Unit ｜ 中央处理器</dt>
+  <dd>跑操作系统的通用大脑，能同时管很多程序，但实时性差。</dd>
+  <dt>GPU ｜ Graphics Processing Unit ｜ 图形处理器</dt>
+  <dd>专攻大规模并行矩阵运算，擅长视觉和神经网络。</dd>
+  <dt>MCU ｜ Microcontroller Unit ｜ 微控制器</dt>
+  <dd><strong>一整台“电脑”缩到一块小芯片上</strong>（CPU+内存+输入输出全集成），专门控制一个设备。上电就在<strong>裸硬件上直接跑固定程序</strong>（即“无操作系统”），行为可预测 → 能实时。</dd>
+  <dt>OS ｜ Operating System ｜ 操作系统</dt>
+  <dd>管理硬件、调度多个程序的系统软件（如 Linux）；会为公平不停打断/切换各程序，好处是多任务、坏处是“何时轮到你”不确定 → 难实时。</dd>
+  <dt>real-time ｜ 实时</dt>
+  <dd><strong>保证在规定时间内一定完成（准时、可预测）</strong>就叫实时。无 OS 的微控制器能实时；有 OS 的 CPU 难保证。（记准：实时=准时，跟快慢无关。）</dd>
+  <dt>ROM / RAM ｜ Read-Only / Random-Access Memory ｜ 只读存储器 / 随机存取存储器</dt>
+  <dd>ROM 存固定程序（断电不丢），RAM 是运行时的临时内存（断电即丢）。</dd>
+</dl>
 
-  <h3>阶段 C · 保持（8月—考前，约 3-4 周，5h）— 最重要，专治遗忘</h3>
-  <ul>
-    <li>每周 2-3 次、每次 30 min：<strong>快速自测手册</strong>（每块合书复述原理）+ <strong>轮流重做一套真题</strong> + 扫一遍手册《附录·30分钟速览》。</li>
-    <li>8月17日前后（考前一周）：把 <strong>2026 卷第三次</strong>做一遍，应稳定 50+；同时闭卷做一遍<a href="exam.html">全新措辞的模拟卷</a>。</li>
-    <li>8月23日（考前 2 天）：三套真题<strong>只看还错的题</strong> + 通读钓鱼清单。</li>
-    <li>8月24日（考前 1 天）：只快过《附录速览》+ 最弱的 1-2 块，早睡。</li>
-  </ul>
+<h3>传感器与相机</h3>
+<dl class="terms">
+  <dt>IR ｜ Infrared ｜ 红外（测距传感器）</dt>
+  <dd>发红外光、收反射光来测距。课程实物 Sharp GP2Y0A41SK0F：量程仅 <strong>4–30 cm</strong>，输出模拟电压且与距离非线性。最小量程大于零。</dd>
+  <dt>Ultrasonic ｜ 超声波（测距传感器）</dt>
+  <dd>发 40 kHz 声波脉冲、收回波测距。课程实物 Devantech SRF08：量程 <strong>3 cm–6 m</strong>（远比红外长），内置微处理器、I²C 接口。</dd>
+  <dt>RGB ｜ Red-Green-Blue ｜ 红绿蓝</dt>
+  <dd>三原色，彩色图像的通道。传感器靠拜耳滤色阵列（2×2 = 2绿1红1蓝）产生颜色信息。</dd>
+  <dt>ISP ｜ Image Signal Processor ｜ 图像信号处理器</dt>
+  <dd>把传感器输出的原始拜耳图加工成正常照片：去马赛克（拜耳→RGB）、白平衡、gamma 校正、tone mapping、降噪。视觉算法几乎都用 ISP 之后的数据。</dd>
+  <dt>rolling / global shutter ｜ 卷帘快门 / 全局快门</dt>
+  <dd>卷帘：像素逐行曝光读出（每行时刻略不同）→ 便宜、快、拍运动会歪斜；全局：所有像素同一瞬间曝光再统一读出 → 无畸变、但更贵更慢。</dd>
+  <dt>HSV ｜ Hue-Saturation-Value ｜ 色相-饱和度-明度</dt>
+  <dd>把亮度 (luma) 和色彩 (chroma) 分开的颜色表示法——颜色与亮度无关，光照变化时按颜色过滤依然稳定，比 RGB 好用。</dd>
+</dl>
 
-  <h3>考场策略（比学时更能提分）</h3>
-  <ul>
-    <li><strong>每题必答、绝不留空</strong>（不扣分）——上次 12 分丢在留空，这一条直接从 40 提到 ~52。</li>
-    <li>见到 <code>good idea / best / should</code> → 按“最佳实践”判；见到 <code>can</code> → 问“要成立是不是得靠歪招？是 → FALSE”。</li>
-    <li>运动学题：草稿纸从 ICR 推 5 行核对系数，别凭印象。</li>
-    <li>绝对词（exactly / always / all / automatically）先标记、回头细想。目标 ≥ 50/60。</li>
-  </ul>
+<h3>软件工程（第二薄弱块，重点读）</h3>
+<dl class="terms">
+  <dt>Docker ｜ 容器化工具</dt>
+  <dd>把程序连同它需要的<strong>所有依赖</strong>打包成一个“集装箱”，搬到任何机器上都一模一样地跑，根治“在我电脑上能跑、到别处就崩”。</dd>
+  <dt>镜像 vs 容器 ｜ image vs container</dt>
+  <dd><strong>镜像 (image)</strong> 是打包好的<strong>静态模板</strong>（像安装光盘）；<strong>容器 (container)</strong> 是镜像<strong>跑起来的运行实例</strong>（像装好正在用的系统）。<code>docker run</code> = 从镜像创建并启动一个容器；<code>docker build</code> 才是造镜像。</dd>
+  <dt>Alpine / Ubuntu ｜ 两种 Linux 发行版</dt>
+  <dd>常用作 Docker 的<strong>基础镜像 (base image)</strong>：Ubuntu 大而全（功能多、体积大），Alpine 极简（体积小）；机器人求小 → 用 <strong>Alpine</strong>。</dd>
+  <dt>多阶段构建 ｜ multi-stage build</dt>
+  <dd>一个 Dockerfile 里写<strong>两个 FROM</strong>——第一阶段(builder)装编译工具把程序编出来，第二阶段只把<strong>编好的程序</strong>复制过去。好处：<strong>最终镜像只含编好的程序 → 很小</strong>（编译工具留在了 builder 阶段）。（24/25 的 Dockerfile 图题考的就是它。）</dd>
+  <dt>微服务 ｜ microservice</dt>
+  <dd>把一个大程序<strong>拆成许多各管一件事的独立小程序</strong>，各自单独开发/部署/替换，之间用统一协议发消息通信。（对立面 = 单体 monolithic：全焊成一大块。）</dd>
+  <dt>技术债 ｜ technical debt</dt>
+  <dd>为图快走捷径而欠下的“债”——当下省事，日后要花更多力气偿还（重构、修 bug）。</dd>
+  <dt>CI ｜ Continuous Integration ｜ 持续集成</dt>
+  <dd>管<strong>“编译+测试”</strong>阶段——每次提交代码，服务器自动构建并跑测试，确保新旧代码合得上。产出一个“通过测试的二进制”。</dd>
+  <dt>CD ｜ Continuous Deployment ｜ 持续部署</dt>
+  <dd>管<strong>“上线”</strong>阶段——把 CI 产出的、测试通过的二进制<strong>自动部署</strong>到产品（机器人）上。</dd>
+  <dt>CI/CD 的区别一句话</dt>
+  <dd><strong>CI 在前，负责“造出并验好一个二进制”；CD 在后，负责“把它自动送上机器人”。</strong>合起来 = 从提交代码到部署上线全自动的流水线。</dd>
+  <dt>CE ｜ Continuous Experimentation ｜ 持续实验</dt>
+  <dd>上线后只先发给一部分机器人（灰度/金丝雀），用数据评估好坏再全量。</dd>
+  <dt>OTA ｜ Over-The-Air (update) ｜ 空中（无线）升级</dt>
+  <dd><strong>远程把新软件“下发/装”到野外机器人上</strong>，方向是<strong>软件往下走</strong>。（对照：软件下发=OTA；数据回传=远程监控。）</dd>
+  <dt>HIL ｜ Hardware-In-the-Loop ｜ 硬件在环</dt>
+  <dd>把<strong>真实硬件</strong>接进测试回路一起测，可自动化。</dd>
+  <dt>SIL ｜ Software-In-the-Loop ｜ 软件在环</dt>
+  <dd>全程在软件仿真里跑真实代码（硬件用仿真替代）。</dd>
+  <dt>DIL / 数据回放 ｜ Data-In-the-Loop / data replay</dt>
+  <dd>回放事先录好的真实数据来测试，开环、完全可复现。<br><strong>记忆串</strong>：SIL（纯软件）→ HIL（接真硬件）→ 数据回放（喂录好的数据）——都是“测试/验证”的手段，越往后越接近现实。</dd>
+  <dt>KPI ｜ Key Performance Indicator ｜ 关键性能指标</dt>
+  <dd>衡量机器人在野外表现好坏的量化指标。</dd>
+  <dt>SSH ｜ Secure Shell ｜ 安全外壳协议</dt>
+  <dd><strong>远程登录</strong>到机器人上敲命令的工具（本职就是登录操作）。</dd>
+  <dt>UDP ｜ User Datagram Protocol ｜ 用户数据报协议</dt>
+  <dd>一种“发出去不等回执”的快速网络传输方式；libcluon 用它的组播 (multicast) 在微服务间传消息。</dd>
+  <dt>ROS ｜ Robot Operating System ｜ 机器人操作系统</dt>
+  <dd>一个大而全但<strong>单体式 (monolithic)</strong> 的机器人软件框架，作为 OpenDLV 的对照物出现。</dd>
+  <dt>OpenDLV</dt>
+  <dd>本课程用的、由许多 libcluon 微服务松散组成的机器人软件环境（相对 ROS 更轻更模块化）。</dd>
+  <dt>ARM64 / AMD64</dt>
+  <dd>两种<strong>CPU 指令集架构</strong>。记忆钩子：<strong>小设备省电用 ARM64</strong>（树莓派/机器人）、<strong>大服务器强力用 AMD64/x86</strong>（GitLab CI），架构不同 → 需交叉编译（常规操作，不算"难点"）。</dd>
+</dl>
+
+<h3>运动学与状态估计</h3>
+<dl class="terms">
+  <dt>ICR ｜ Instantaneous Centre of Rotation ｜ 瞬时旋转中心</dt>
+  <dd>某一瞬间整台车绕之转圈的那个点，是运动学推导的出发点。</dd>
+  <dt>KF ｜ Kalman Filter ｜ 卡尔曼滤波</dt>
+  <dd>把“合并多个数据来源”写成数学公式的<strong>最优估计器</strong>：每步先用模型预测、再用测量修正。<strong>只适用于线性模型</strong>（非线性用 EKF）。</dd>
+  <dt>EKF ｜ Extended Kalman Filter ｜ 扩展卡尔曼滤波</dt>
+  <dd>KF 的非线性版，用雅可比矩阵局部线性化；差速驱动（含 cos/sin φ）必须用它。</dd>
+  <dt>SLAM ｜ Simultaneous Localisation And Mapping ｜ 同时定位与建图</dt>
+  <dd>机器人边走边估自己位置、边建地图。</dd>
+  <dt>GNSS ｜ Global Navigation Satellite System ｜ 全球导航卫星系统</dt>
+  <dd>卫星定位的统称（GPS 是其中一种）；提供全局参照，但噪声大、频率低。</dd>
+  <dt>IMU ｜ Inertial Measurement Unit ｜ 惯性测量单元</dt>
+  <dd>测加速度和角速度的传感器，用于航位推算。</dd>
+</dl>
+
+<h3>控制与决策</h3>
+<dl class="terms">
+  <dt>PID ｜ Proportional-Integral-Derivative ｜ 比例-积分-微分（控制器）</dt>
+  <dd>三项相加的经典控制器。P 主纠偏、I 消稳态误差、<strong>D 抑制振荡</strong>。</dd>
+  <dt>FSM ｜ Finite-State Machine ｜ 有限状态机</dt>
+  <dd>由“在某状态、满足条件就跳到另一状态”构成的行为切换逻辑；可用作用于全局变量的 if 语句实现。</dd>
+  <dt>BBR ｜ Behaviour-Based Robotics ｜ 基于行为的机器人学</dt>
+  <dd>让一堆简单行为并行、整体智能涌现的范式；灵感来自<strong>动物行为学 (ethology)</strong>。</dd>
+  <dt>ER ｜ Evolutionary Robotics ｜ 进化机器人学</dt>
+  <dd>用进化算法把控制器“演化”出来的范式，行为自然长成（无预设阶段）。</dd>
+  <dt>Symbolic AI ｜ 符号 AI</dt>
+  <dd>先建模再规划、分阶段、集中式的传统范式。</dd>
+  <dt>ANN ｜ Artificial Neural Network ｜ 人工神经网络</dt>
+  <dd>足够大的全连接网是“万能逼近器”，能拟合任意映射。</dd>
+  <dt>GA ｜ Genetic Algorithm ｜ 遗传算法</dt>
+  <dd>随机种群 → 按适应度选择 → 交叉+变异 → 下一代，进化机器人常用它。</dd>
+  <dt>A* / Dijkstra / RRT (Rapidly-exploring Random Tree 快速探索随机树)</dt>
+  <dd>路径规划算法；A* = Dijkstra + 启发式。</dd>
+</dl>
+
+
 </div>
 
-<div class="card">
-  <h2>四、风险提示</h2>
-  <ul>
-    <li>出题趋势是<strong>题量变大、覆盖变广</strong>（33 → 46 → 60），2026 年新增的历史/硬件/传感器块大概率保留——不能跳过。</li>
-    <li>若补考卷恢复“答错倒扣”规则（2024年8月曾如此），考前务必看清卷首计分说明，再决定不确定题是否留空。</li>
-  </ul>
-</div>
-
-</div>
-
-<footer>TME290 / FIM764 Autonomous Robots · 备考资料整理 · 考试日 2026-08-25</footer>
-
-<script>
-(function () {
-  var exam = new Date(2026, 7, 25); // 2026-08-25
-  var days = Math.ceil((exam - new Date()) / 86400000);
-  var el = document.getElementById('countdown');
-  if (days > 1) el.textContent = '距考试还有 ' + days + ' 天';
-  else if (days === 1) el.textContent = '明天考试，早睡！';
-  else if (days === 0) el.textContent = '今天考试，每题必答、绝不留空！';
-  else el.textContent = '考试已结束，辛苦了！';
-})();
-</script>
+<footer>TME290 / FIM764 Autonomous Robots · 原理复习手册 · <a href="exam.html">去做模拟自测 →</a></footer>
 </body>
 </html>

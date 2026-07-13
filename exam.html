@@ -13,8 +13,8 @@
   <div class="nav-inner">
     <a class="brand" href="index.html">TME290 <span>自主机器人</span> 备考站</a>
     <div class="links">
-      <a href="index.html">复习计划</a>
-      <a href="handbook.html">知识手册</a>
+      <a href="index.html">知识手册</a>
+      <a href="plan.html">复习计划</a>
       <a href="exam.html" class="active">自测</a>
     </div>
   </div>
@@ -38,7 +38,7 @@
 
 </div>
 
-<footer>做完复盘错题时，回<a href="handbook.html">知识手册</a>对应节看原理，不要只记答案。</footer>
+<footer>做完复盘错题时，回<a href="index.html">知识手册</a>对应节看原理，不要只记答案。</footer>
 
 <script src="exam-data.js"></script>
 <script>
@@ -256,7 +256,7 @@
         (exam.penalty ? '<div>按 2024 原卷规则（答错 −1、留空 0）：<strong>' + (score - wrong) + '</strong> 分</div>' : '') +
         '<div>错题/留空：' + (wrongList.length ? wrongList.map(function (n) { return '<a href="#q' + n + '">' + n + '</a>'; }).join(', ') : '无 🎉') +
         (blank ? '（其中留空 ' + blank + ' 题）' : '') + '</div>' +
-        '<div style="color:var(--muted);font-size:0.9rem">复盘：点错题号跳到解析，再回<a href="handbook.html">知识手册</a>对应节看原理。</div>' +
+        '<div style="color:var(--muted);font-size:0.9rem">复盘：点错题号跳到解析，再回<a href="index.html">知识手册</a>对应节看原理。</div>' +
       '</div>';
 
     exam.sections.forEach(function (sec) {
