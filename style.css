@@ -184,6 +184,63 @@ dl.terms dd { margin: 0.1rem 0 0 0; color: #374151; }
   font-size: 0.93rem;
 }
 
+/* ---------- Exam: one question per page ---------- */
+.single { max-width: 620px; margin: 0 auto; }
+.progressbar {
+  height: 6px;
+  background: var(--line);
+  border-radius: 999px;
+  overflow: hidden;
+  margin: 0.2rem 0 1rem;
+}
+.progressbar div {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 999px;
+  transition: width 0.2s;
+}
+.qcard {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.5rem 1.4rem;
+}
+.qcard .meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.8rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+.qcard .meta .sec { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.qcard .meta span:last-child { white-space: nowrap; }
+.qcard .stem-big {
+  font-size: 1.15rem;
+  line-height: 1.75;
+  margin: 0.7rem 0 1.5rem;
+  min-height: 5.5rem;
+}
+.big-tf { display: flex; gap: 0.8rem; }
+.big-tf button {
+  flex: 1;
+  font: inherit;
+  font-size: 1.1rem;
+  font-weight: 800;
+  padding: 1rem 0;
+  border-radius: 12px;
+  background: #fff;
+  cursor: pointer;
+}
+.big-tf .bf { border: 2px solid #fecaca; color: var(--false); }
+.big-tf .bt { border: 2px solid #a7f3d0; color: var(--true); }
+.big-tf .bf:hover { background: var(--false-soft); }
+.big-tf .bt:hover { background: var(--true-soft); }
+.big-tf .bf.sel { background: var(--false); border-color: var(--false); color: #fff; }
+.big-tf .bt.sel { background: var(--true); border-color: var(--true); color: #fff; }
+.qnav { display: flex; justify-content: space-between; margin-top: 1.1rem; }
+.kbd-hint { text-align: center; color: var(--muted); font-size: 0.8rem; margin-top: 0.9rem; }
+.blank-links a { margin-right: 0.5rem; }
+
 /* ---------- Exam ---------- */
 .exam-actions .progress { margin-left: auto; color: var(--muted); font-size: 0.95rem; }
 
@@ -301,6 +358,11 @@ footer {
   .question .stem { font-size: 0.95rem; }
   .tf button { flex: 1; padding: 0.55rem 0; font-size: 1rem; }
   .explain { font-size: 0.88rem; }
+
+  .qcard { padding: 1.1rem 1rem; }
+  .qcard .stem-big { font-size: 1.05rem; min-height: 6.5rem; }
+  .big-tf button { padding: 1.1rem 0; }
+  .kbd-hint { display: none; }
 
   .exam-actions { flex-wrap: wrap; gap: 0.6rem; }
   .btn { padding: 0.55rem 1.1rem; }
