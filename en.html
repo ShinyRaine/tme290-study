@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>TME290 Handbook · Principles Review</title>
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="index.html">TME290 <span>Autonomous Robots</span> Study Hub</a>
+    <div class="links">
+      <a href="en.html" class="active">Handbook (EN)</a>
+      <a href="index.html">中文版</a>
+      <a href="plan.html">复习计划</a>
+      <a href="exam.html">自测</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<div class="hero">
+  <h1>Principles Review Handbook (English edition)</h1>
+  <p><strong>How to use it</strong>: this is a book of explanations, not flashcards. Each section first explains one complete principle (why things are the way they are), then derives from that principle every true/false statement the exam may ask. Once you understand the principle paragraph, you can work out the truth of any statement yourself.</p>
+  <p><span class="badge warn">⚠️</span> = questions answered wrong in the June 2026 diagnostic attempt (priority for review).</p>
+</div>
+
+<div class="toc">
+  <strong>Contents</strong>
+  <ol>
+    <li><a href="#s1">§1 · Computing platforms</a></li>
+    <li><a href="#s2">§2 · Sensors &amp; cameras</a></li>
+    <li><a href="#s3">§3 · Software engineering (highest weight)</a></li>
+    <li><a href="#s4">§4 · Differential-drive kinematics</a></li>
+    <li><a href="#s5">§5 · Kalman filter</a></li>
+    <li><a href="#s6">§6 · Control / simulation / path planning</a></li>
+    <li><a href="#s7">§7 · Decision making: FSM/BBR/ER/ANN</a></li>
+    <li><a href="#s8">§8 · A short history of robots</a></li>
+    <li><a href="#quick">Appendix · 30-minute pre-exam review</a></li>
+    <li><a href="#terms">Glossary of abbreviations (kept last for reference)</a></li>
+  </ol>
+</div>
+
+<!-- ============ Section 1 ============ -->
+<h2 id="s1">§1 · The four computing platforms of a robot (★all 4 missed in June, L2)</h2>
+<div class="principle">
+  <p><strong>Principle</strong>: robot hardware sits on a spectrum from "more hardware-like" to "more software-like". <strong>The closer to hardware and the more rigid the structure → the faster, the more power-efficient, and the more it can guarantee on-time (real-time) execution — but the less it can do and the harder it is to change. The closer to software, the more flexible → it can do more and is easier to change, but on-time execution becomes harder to guarantee.</strong> From hard to soft: PLD/FPGA → microcontroller → CPU → GPU.</p>
+  <p><strong>What each of the four actually is</strong> (following the L2 slides):</p>
+  <p>· <strong>PLD/FPGA (programmable logic device)</strong>: its function is added in a <strong>flashing process</strong> — and what the flashing changes is <strong>the actual hardware circuitry inside the chip</strong>. It is not "installing a program"; it is rewiring the circuit itself (the commonly misunderstood point). Supports inputs/outputs and program loops. Benefit: <strong>extremely fast, extremely low-power execution</strong> (the signal passes straight through hardware circuitry). Drawback: strong limitations in what features and how much "program" it can hold.</p>
+  <p>· <strong>Microcontroller</strong>: also programmed by flashing — but what is flashed is a <strong>program</strong>: it is written into read-only memory (ROM) and <strong>starts executing automatically the moment the device powers on</strong>, with <strong>no operating system</strong> anywhere. Despite its size it supports fairly advanced programs and hardware peripherals (e.g. WiFi, disk storage). Benefit: a <strong>simple, low-power, flexible real-time system with outstanding hardware-integration capabilities</strong> (it drives motor and sensor pins directly). Drawback: limited program features and execution flexibility.<br>— What <strong>real-time</strong> means: a <strong>guarantee that execution completes within a set deadline, at predictable times</strong>. A microcontroller is real-time precisely because there is no OS to interrupt it. (Remember: real-time = on time and predictable — it has nothing to do with "being fast".)</p>
+  <p>· <strong>CPU</strong>: its runtime is managed by an <strong>operating system</strong> (i.e. a "normal computer", e.g. the Linux kernel); <strong>multiple programs run in parallel</strong>, memory (RAM) and disk storage interact constantly, and any software and tooling is supported. Benefit: runs advanced software and is reasonably quick. Drawback: <strong>cannot guarantee real-time operation</strong> (when your program gets its turn is decided by the OS scheduler), so it is somewhat limited when interacting directly with hardware.</p>
+  <p>· <strong>GPU</strong>: an execution model similar to a microcontroller, but designed for <strong>matrix operations</strong> (originally built for graphics — an image is a matrix), with standardized interfaces (e.g. Vulkan); it <strong>needs a companion CPU</strong> for memory management and control. Benefit: very high performance for matrix operations → computer vision (CV) and deep neural networks (DNN). Drawback: the CPU–GPU interface complicates low-level implementations.</p>
+  <p>The course mainly uses <strong>CPU-based systems</strong> (your computer + the Raspberry Pi).</p>
+</div>
+<h3>Past-exam drill (statement → official answer | note; ⚠️ = missed in June)</h3>
+<ul class="qlist">
+  <li><span class="badge year">26 Q4</span> <span class="en">"A programmable logic device is extremely fast in execution."</span> <span class="badge t">T</span> <span class="badge warn">⚠️</span><span class="zh">Reconfigurable circuitry, signal passes straight through → extremely fast.</span></li>
+  <li><span class="badge year">26 Q5</span> <span class="en">"A microcontroller runs a very lean operating system (OS)."</span> <span class="badge f">F</span> <span class="badge warn">⚠️</span><span class="zh">A microcontroller runs its program directly on bare hardware — which is exactly why it can be real-time.</span></li>
+  <li><span class="badge year">26 Q6</span> <span class="en">"A microcontroller is capable of real-time execution."</span> <span class="badge t">T</span> <span class="badge warn">⚠️</span><span class="zh">Bare-metal execution with predictable timing → real-time.</span></li>
+  <li><span class="badge year">26 Q7</span> <span class="en">"A CPU is optimized to run one executable at a time."</span> <span class="badge f">F</span> <span class="badge warn">⚠️</span><span class="zh">A CPU with an OS exists precisely to run many programs concurrently.</span></li>
+</ul>
+
+<!-- ============ Section 2 ============ -->
+<h2 id="s2">§2 · Sensors &amp; cameras (L5)</h2>
+<div class="principle">
+  <p><strong>Distance sensors (the two actually on the Kiwi, L4)</strong>: both are <strong>active sensors</strong> — they emit a signal themselves and compute distance from the reflection they receive.<br>
+  · <strong>Ultrasonic</strong>, the course uses the Devantech SRF08: emits <strong>40 kHz sound pulses</strong> and listens for the echo; range <strong>3 cm – 6 m</strong>; has a built-in microprocessor and an I²C bus interface.<br>
+  · <strong>Infrared (IR)</strong>, the course uses the Sharp GP2Y0A41SK0F: emits infrared light and receives the reflection; range only <strong>4 – 30 cm</strong>; output is an <strong>analogue voltage</strong> whose relation to distance is <strong>non-linear</strong> (a conversion is needed to obtain a distance reading).<br>
+  Two exam points follow directly: ① both have a <strong>minimum range larger than zero</strong> (they cannot measure at zero distance — the echo/reflection geometry breaks down when too close); ② <strong>ultrasonic (metres) has a far longer range than IR (centimetres)</strong>.</p>
+  <p><strong>The camera imaging chain (L5)</strong>: <strong>the image sensor is the central part of any camera</strong> (only a handful of manufacturers worldwide); a camera = the interface between the sensor chip and the user. Sensors come as single-channel (mono) or RGB. Colour works like this: a sensor pixel only measures light intensity and cannot tell colours apart, so each pixel is covered by a red/green/blue filter arranged in a <strong>Bayer pattern</strong> — each 2×2 block has <strong>2 green, 1 red, 1 blue</strong> (the human eye is most sensitive to green; the green channel carries the luminance detail, so green gets a double share). Pixel depth is 8/10/12 bits. The raw "Bayer image" from the sensor is not yet a photo — it goes through <strong>ISP (image signal processing)</strong>: <strong>demosaicing</strong> (Bayer single layer → RGB three channels), <strong>white balancing</strong>, <strong>gamma correction</strong> (compensates the eye's non-linear perception), <strong>tone mapping</strong>, <strong>noise reduction</strong>. Almost all vision algorithms and ML/AI tools use post-ISP data.</p>
+  <p><strong>How the two shutters actually work</strong> (the slides only name the contrast; the mechanism is):<br>
+  · <strong>Rolling shutter</strong>: pixels are exposed and read out <strong>row by row</strong> — within one frame, <strong>each row records the world at a slightly different moment</strong>. Benefit: no extra circuitry per pixel, so the sensor is <strong>cheap</strong> and readout is <strong>fast</strong> (high frame rates). Cost: with fast-moving subjects the rows are misaligned — skewed, wobbling images (the "jello effect").<br>
+  · <strong>Global shutter</strong>: <strong>all pixels start and stop exposure at the same instant</strong>; the result is first stored in a per-pixel storage cell and then read out together. No motion distortion at all; but each pixel needs an extra storage circuit → <strong>more expensive</strong>, and readout is usually <strong>slower</strong>.<br>
+  One-liner for the exam: <strong>rolling = fast + cheap + distorts motion; global = same instant + expensive + slow</strong>.</p>
+  <p><strong>Calibration (the precise L5 definitions — stop remembering these vaguely)</strong>:<br>
+  · <strong>Intrinsic calibration</strong>: transforms <strong>image pixel coordinates (i, j)</strong> into <strong>camera coordinates (x, y)</strong> — correcting lens/optics distortion and the camera's own properties (a real image never lands on a perfect rectangle; after correction the angular increment between neighbouring pixels is equal). Calibrated with a <strong>checkerboard</strong> (all square spacings equal and known). <strong>Concerns the camera itself only.</strong><br>
+  · <strong>Extrinsic calibration</strong>: transforms camera coordinates (x, y) into the <strong>robot's local frame (X, Y)</strong> — it depends on <strong>where and how the camera is mounted on the vehicle</strong>; only with it can you <strong>relate detections from different sensors to each other</strong>. Assuming a flat ground surface, a projective transformation can map every pixel to a ground-plane (X, Y). Vehicle frame convention: origin = centre of the first axle, X forward, Y to the left.<br>
+  Exam point: what "relates the camera to other sensors" is the <strong>extrinsic</strong> calibration, not the intrinsic one.</p>
+  <p><strong>HSV vs RGB (L5)</strong>: HSV (hue–saturation–value) separates the image's <strong>intensity (luma)</strong> from its <strong>colour information (chroma)</strong> — <strong>colour becomes independent of brightness</strong>. So when lighting changes, colour filtering (e.g. "find the blue cone") stays stable; filtering colours directly in RGB is fragile because all three channels shift together with the lighting. (In OpenCV, H uses 0–180 instead of 0–360.)</p>
+</div>
+<h3>Past-exam drill</h3>
+<ul class="qlist">
+  <li><span class="badge year">26 Q8</span> <span class="en">"IR sensors have a minimum range larger than zero."</span> <span class="badge t">T</span><span class="zh">All active ranging sensors have a &gt;0 minimum range.</span></li>
+  <li><span class="badge year">26 Q9</span> <span class="en">"IR sensors have a longer range compared to ultrasonic sensors."</span> <span class="badge f">F</span><span class="zh">Ultrasonic reaches much further.</span></li>
+  <li><span class="badge year">26 Q10</span> <span class="en">"A conventional RGB camera captures more light within the red wavelengths compared to blue and green."</span> <span class="badge f">F</span><span class="zh">The Bayer pattern has the most green (2G 1R 1B).</span></li>
+  <li><span class="badge year">26 Q11</span> <span class="en">"A rolling shutter is faster compared to a global shutter."</span> <span class="badge t">T</span> <span class="badge warn">⚠️</span><span class="zh">Row-by-row readout is faster (global shutter is slower and pricier).</span></li>
+  <li><span class="badge year">26 Q12</span> <span class="en">"Intrinsic calibration of a camera relates it to other sensors on the robot."</span> <span class="badge f">F</span><span class="zh">That is extrinsic calibration; intrinsic only calibrates the camera itself (focal length/distortion).</span></li>
+</ul>
+
+<!-- ============ Section 3 ============ -->
+<h2 id="s3">§3 · Software engineering: Docker / microservices / CI-CD / OTA / git / deployment (★highest weight, 7 missed in June, L2/L3)</h2>
+<div class="principle">
+  <p><strong>Principle (the full chain from one line of code to the robot)</strong>: use <strong>git</strong> to version the <strong>source code</strong> (traceability) → <strong>CI (continuous integration)</strong> automatically builds and <strong>runs tests</strong> on every commit, producing a verified binary → (optionally with <strong>HIL</strong> testing on real hardware) → <strong>cross-compilation</strong> builds on an amd64 server a program the arm64 robot can run → packaged as a <strong>Docker container</strong> (<code>docker run</code> creates a <strong>container</strong> from an image; robots use the small <strong>Alpine</strong> base) → split into microservices that <strong>each handle a single task</strong> (sharing a common protocol, which helps OTA/CI-CD) → <strong>OTA (over-the-air updates)</strong> pushes software <strong>down</strong> to the robot; data flowing back up = remote monitoring.</p>
+  <p><strong>Why containers are good (L2)</strong>: a container is "operating-system-level virtualisation" — it <strong>shares the host kernel and isolates only the application environment</strong>, so it is far lighter than a virtual machine (each VM carries a whole OS + kernel). Three big wins: binaries live in a <strong>well-defined isolated environment</strong>; <strong>transferability between platforms</strong>; <strong>one self-contained bundle per software feature → naturally suited to OTA</strong>. The build chain benefits too: source code enters an isolated build environment, the build logic itself becomes portable, and cross-compilation tools can be installed (e.g. amd64 → arm).</p>
+  <p><strong>The loop after shipping (L2)</strong>: <strong>OTA</strong> serves not only products in the wild but also development — it brings the office closer to the physical product and provides version control for a whole fleet. <strong>Remote monitoring</strong> sends field data back to HQ, evaluated formally via <strong>KPIs</strong> (quantitative indicators defined for the whole robot fleet); KPIs are the enabler of <strong>CE (continuous experimentation)</strong>. Typical CE move: release the new version to only a fraction (e.g. 20%) of users/robots first, and roll out fully only when the data proves it better — Tesla even ships features silently before public launch and observes them remotely in "what-if" mode, on roughly a million miles per day.</p>
+  <p><strong>Which tool for parameter tuning (L5 — the principle behind Q31–33)</strong>: each of the three options has a flaw — <strong>simulation</strong>: generally not reproducible, never realistic (motion and sensors), and computationally heavy (integrating dynamic equations); <strong>real hardware</strong>: not reproducible, large time overhead per test; <strong>data replay</strong>: <strong>open-loop → fully reproducible results</strong>; feed the same recording to the perception algorithm over and over to tune thresholds — the most efficient (one project's time split in the slides: 50% replay / 20% simulation / 30% hardware). But note: replay is <strong>open-loop</strong> — your control output cannot change the recording — so it <strong>cannot tune motion-control parameters</strong> (those need closed-loop feedback: simulation or hardware).</p>
+  <p>⚠️ Two counter-intuitive but officially settled points: <strong>microservices are about deployment/isolation/updates; choosing algorithms is a separate concern</strong> (hence "microservices make it easier to plan algorithms" is F in all three years); and <strong>differing CPU architectures (ARM↔AMD64) are routinely solved by cross-compilation</strong> (hence "the architecture difference is a general difficulty" is F).</p>
+</div>
+
+<h3>Drill · Dockerfile (multi-stage build)</h3>
+<ul class="qlist">
+  <li><span class="badge year">24 Q3 / 25 Q3</span> <span class="en">"The build tools installed ... are needed in the resulting Docker image."</span> <span class="badge f">F</span><span class="zh">Build tools stay in the builder stage; the final image contains only the compiled program.</span></li>
+  <li><span class="badge year">24 Q4 / 25 Q4</span> <span class="en">"Every time a new Docker image is created ... the source code seems to be tested using pre-defined test cases."</span> <span class="badge t">T</span><span class="zh">Tests run at build time (make test).</span></li>
+  <li><span class="badge year">24 Q2 / 25 Q2</span> <span class="en">"The word builder ... is user-specified." / "The second FROM ... will start over, creating a second Docker image."</span> <span class="badge t">T</span><span class="zh">"builder" is a user-chosen name; a second FROM starts a fresh image.</span></li>
+  <li><span class="badge year">24 Q5 / 25 Q5</span> <span class="en">"Ubuntu lacks the package libstdc++, making it unable to run the compiled program."</span> <span class="badge f">F</span><span class="zh">A made-up dependency claim.</span></li>
+  <li><span class="badge year">24 Q6 / 25 Q6</span> <span class="en">"Line 24 immediately runs the compiled program."</span> <span class="badge f">F</span><span class="zh">CMD only declares the command to run when a container starts (the build merely records it).</span></li>
+  <li><span class="badge year">25 Q1</span> <span class="en">"RUN commands can be placed before the first FROM command."</span> <span class="badge f">F</span><span class="zh">RUN must come after FROM.</span></li>
+  <li><span class="badge year">24 Q1</span> <span class="en">"Line 2 indicate what base image the resulting image will be based on."</span> <span class="badge f">F</span><span class="zh">In a multi-stage build the final image is based on the second FROM.</span></li>
+</ul>
+
+<h3>Drill · image size / docker run / libcluon</h3>
+<ul class="qlist">
+  <li><span class="badge year">24 Q7 / 25 Q7 / 26 Q18</span> <span class="en">"Alpine images are in general smaller ... compared to Ubuntu." (24: T) / "Ubuntu ... images are smaller than Alpine." (25: F) / "Ubuntu-based images are recommended ... include more features." (26: F)</span><span class="zh">One line: <strong>Alpine is small; robots use Alpine</strong>.</span></li>
+  <li><span class="badge year">24 Q9 / 25 Q9</span> <span class="en">"The command docker run spawns a Docker image."</span> <span class="badge f">F</span><span class="zh">run produces a container; docker build makes images.</span></li>
+  <li><span class="badge year">26 Q20</span> <span class="en">"The command docker run creates a Docker container."</span> <span class="badge t">T</span> <span class="badge warn">⚠️</span><span class="zh">run produces a <strong>container</strong>.</span></li>
+  <li><span class="badge year">26 Q28</span> <span class="en">"Small binaries are hard to achieve when cross-compiling."</span> <span class="badge f">F</span><span class="zh">Cross-compilation produces small binaries just as well.</span></li>
+  <li><span class="badge year">24 Q8 / 25 Q8 / 26 Q19</span> <span class="en">"libcluon is a library for transmitting data between running computer programs."</span> <span class="badge t">T</span><span class="zh">An inter-process communication library — asked all three years.</span></li>
+</ul>
+
+<h3>Drill · microservices</h3>
+<ul class="qlist">
+  <li><span class="badge year">24 Q10 / 25 Q10 / 26 Q21</span> <span class="en">"A set of microservices ... shares a common communication protocol."</span> <span class="badge t">T</span><span class="zh">A common protocol.</span></li>
+  <li><span class="badge year">24 Q11 / 25 Q11</span> <span class="en">"A microservice should handle all the tasks needed for operating the robot."</span> <span class="badge f">F</span><span class="zh">One service, one task.</span></li>
+  <li><span class="badge year">26 Q22</span> <span class="en">"A microservice should handle a single task."</span> <span class="badge t">T</span><span class="zh">Same fact, stated positively.</span></li>
+  <li><span class="badge year">24 Q12 / 25 Q12 / 26 Q23</span> <span class="en">"Microservices makes it easier to plan what algorithms should run in/on a robot."</span> <span class="badge f">F</span> <span class="badge warn">⚠️(26)</span><span class="zh"><strong>F in all three years!</strong> Microservices are about deployment/isolation/updates — algorithm choice is separate.</span></li>
+  <li><span class="badge year">24 Q13 / 25 Q13 / 26 Q24</span> <span class="en">"Microservices makes it easier to work with OTA and CI/CD."</span> <span class="badge t">T</span> <span class="badge warn">⚠️(26)</span><span class="zh">Small and independent → easy to update individually.</span></li>
+  <li><span class="badge year">26 Q25</span> <span class="en">"A drawback of microservices is that they are likely to increase technical debt."</span> <span class="badge f">F</span><span class="zh">They rather help contain complexity.</span></li>
+  <li><span class="badge year">26 Q27</span> <span class="en">"Dependencies for a binary is a good way to increase software security."</span> <span class="badge f">F</span><span class="zh">More dependencies = larger attack surface.</span></li>
+</ul>
+
+<h3>Drill · cross-compilation / git / CI / OTA / SSH</h3>
+<ul class="qlist">
+  <li><span class="badge year">24 Q14</span> <span class="en">"Cross-compilation is useful since we can compile software in Alpine to work with Ubuntu."</span> <span class="badge f">F</span><span class="zh">Cross-compilation crosses <strong>CPU architectures</strong> (amd64↔arm64), not Linux distributions.</span></li>
+  <li><span class="badge year">25 Q14</span> <span class="en">"... compile software on one CPU type (e.g. amd64) to run on another (e.g. arm64)."</span> <span class="badge t">T</span><span class="zh">That is the definition.</span></li>
+  <li><span class="badge year">26 Q26</span> <span class="en">"Cross-compilation can be especially useful ... as an automated part of a CI/CD pipeline."</span> <span class="badge t">T</span></li>
+  <li><span class="badge year">26 Q29</span> <span class="en">"A general difficulty ... Raspberry Pi uses ARM64 while a GitLab server runs AMD64."</span> <span class="badge f">F</span><span class="zh">The architectures do differ, but cross-compilation crosses the gap routinely — so "difficulty" makes it F.</span></li>
+  <li><span class="badge year">26 Q13</span> <span class="en">"Using git one can achieve traceability of <strong>binaries</strong> for robots."</span> <span class="badge f">F</span> <span class="badge warn">⚠️</span><span class="zh">git versions <strong>source code</strong>, not binaries; binary traceability comes from CI/CD (the "can" trap: technically possible but a misuse → F).</span></li>
+  <li><span class="badge year">26 Q14</span> <span class="en">"GitLab and GitHub are examples of web-based frontends for git-based CI."</span> <span class="badge t">T</span></li>
+  <li><span class="badge year">26 Q15</span> <span class="en">"CI includes automated testing of binaries."</span> <span class="badge t">T</span> <span class="badge warn">⚠️</span><span class="zh">Automated testing is the core of CI.</span></li>
+  <li><span class="badge year">26 Q16</span> <span class="en">"HIL can be used as part of automated testing."</span> <span class="badge t">T</span> <span class="badge warn">⚠️</span><span class="zh">Hardware-in-the-loop can be automated.</span></li>
+  <li><span class="badge year">26 Q17</span> <span class="en">"OTA is the process of reading performance data from robots in the field."</span> <span class="badge f">F</span> <span class="badge warn">⚠️</span><span class="zh">OTA <strong>pushes software down</strong>; reading data back is monitoring.</span></li>
+  <li><span class="badge year">25 Q42</span> <span class="en">"There are at least three ways of getting a C++-based microservice to the Kiwi robot."</span> <span class="badge t">T</span><span class="zh">There is more than one deployment route.</span></li>
+  <li><span class="badge year">25 Q43 / 26 Q30</span> <span class="en">"SSH is a tool for cross-compilation." (F) / "SSH is a tool primarily used for software deployment." (F)</span> <span class="badge f">F</span><span class="zh">SSH is first and foremost a <strong>remote-login</strong> tool.</span></li>
+</ul>
+
+<!-- ============ Section 4 ============ -->
+<h2 id="s4">§4 · Differential-drive kinematics (★the only derivation, L4)</h2>
+<div class="principle">
+  <p><strong>Know the symbols first</strong>: r = wheel radius; <strong>R = distance from each wheel to the robot's centre</strong> (half the track width); L = distance from the ICR to the robot's centre; V = forward speed of the body; v<sub>L</sub>/v<sub>R</sub> = left/right wheel linear speeds; <strong>φ̇ ("phi-dot") = yaw rate</strong>, i.e. how fast the heading rotates.</p>
+  <p><strong>Principle</strong>: different wheel speeds → the whole robot rotates about the <strong>instantaneous centre of rotation (ICR)</strong> with the same angular rate φ̇. With the ICR at distance L from the centre: v<sub>L</sub> = φ̇(L−R), v<sub>R</sub> = φ̇(L+R). <strong>Add → V = (v<sub>R</sub>+v<sub>L</sub>)/2 (no R!); subtract → φ̇ = (v<sub>R</sub>−v<sub>L</sub>)/(2R) (denominator 2R!)</strong>. Solve back: v<sub>R</sub> = V + φ̇R.</p>
+  <p><strong>Pose = integral of velocity (the complete L4 trio)</strong>: decompose V into V<sub>x</sub> = V·cosφ and V<sub>y</sub> = V·sinφ, then integrate:<br>
+  x₁ = x₀ + ∫ (v<sub>R</sub>+v<sub>L</sub>)/2 · <strong>cos</strong>φ dt　|　y₁ = y₀ + ∫ (v<sub>R</sub>+v<sub>L</sub>)/2 · <strong>sin</strong>φ dt　|　φ₁ = φ₀ + ∫ (v<sub>R</sub>−v<sub>L</sub>)/(2R) dt<br>
+  <strong>x goes with cos, y goes with sin</strong> — a favourite swap trap. When a formula question appears, re-derive on scratch paper and check the coefficients.</p>
+  <p><strong>Kinematics vs dynamics (needed again in §5)</strong>: kinematics only answers "<strong>given the wheel speeds</strong>, how does the pose change" — it says <strong>nothing about how the motion is produced by forces</strong>. Dynamics considers the <strong>forces and torques</strong> acting on the robot (motor torque τ, mass M, moment of inertia I). Simulations use the dynamic model with Euler time-stepping (torques update V and φ̇ first, then φ, finally the position).</p>
+</div>
+<h3>Past-exam drill</h3>
+<ul class="qlist">
+  <li><span class="badge year">24 Q15 / 25 Q15</span> <span class="en">"The forward speed is calculated as V = R(v_R+v_L)/2"</span> <span class="badge f">F</span><span class="zh">Extra R; correct is V=(v_R+v_L)/2.</span></li>
+  <li><span class="badge year">24 Q16 / 25 Q16</span> <span class="en">"The yaw rate is calculated as φ̇=(v_R−v_L)/R"</span> <span class="badge f">F</span><span class="zh">Denominator must be <strong>2R</strong>.</span></li>
+  <li><span class="badge year">26 Q34</span> <span class="en">"It can be shown that v_R = V + φ̇R"</span> <span class="badge t">T</span><span class="zh">Solving back for one wheel speed from V and φ̇.</span></li>
+  <li><span class="badge year">26 Q35</span> <span class="en">"The yaw rate is calculated as φ̇=(v_R−v_L)/2R"</span> <span class="badge t">T</span><span class="zh">Denominator 2R — correct.</span></li>
+  <li><span class="badge year">26 Q36</span> <span class="en">"x₁ = x₀ + ∫ (v_R+v_L)/2·cosφ dt"</span> <span class="badge t">T</span> <span class="badge warn">⚠️</span><span class="zh">Position = integral of the velocity component V·cosφ.</span></li>
+</ul>
+
+<!-- ============ Section 5 ============ -->
+<h2 id="s5">§5 · Kalman filter (★incl. the previously mis-judged Q47, L8)</h2>
+<div class="principle">
+  <p><strong>Principle (following the KF notes)</strong>: the Kalman filter formalises <strong>merging several data sources</strong> as mathematical expressions and is referred to as an <strong>optimal estimator</strong>. Every time step it runs two steps in a fixed order: <strong>① Predict</strong> — use the process model to <strong>predict</strong> the current state from the previous one; <strong>② Update</strong> — use the sensor readings (through the observation model) to estimate the prediction's <strong>offset</strong> and correct it. It is naturally good at handling data with <strong>different update frequencies</strong> (the model fills in while a sensor is silent) and at suppressing <strong>noise</strong> — hence "a KF is often used when sensors have too low update frequency / are noisy" are both T.</p>
+  <p><strong>The two models, precisely (as in the notes)</strong>: the <strong>process model describes "how the state transitions from one step to the next"</strong> (it can depend on process input; the notes explicitly name "the kinematics model of differential steering" as a good example). The <strong>observation model describes "how sensor readings correspond to the state variables"</strong> (it contains calibration data — scaling and bias removal). So "the two models are two ways of modelling the sensors" = F — the process model models motion.</p>
+  <p><strong>Kalman gain</strong>: the noise itself is unpredictable, but it can be estimated as a <strong>trade-off between the previous estimate and the current observation</strong> — the gain is that weight (the notes: "the gain contains the system's trust for each observation"). It cannot increase sensor frequency (that benefit belongs to the filter as a whole, not the gain).</p>
+  <p><strong>Online and recursive</strong>: the filter <strong>can run live throughout the robot's runtime, or on collected data</strong> — both work, so "a KF requires recorded data and cannot be used in a robot" = F.</p>
+  <p><strong>Linearisation (the key exam point)</strong>: the standard KF <strong>assumes both models are linear</strong> (only sums and proportionality between variables). When a model is non-linear, use the <strong>EKF</strong>: estimate the model's local derivatives around the current state <strong>using Jacobian matrices</strong> ("how does the model respond to small changes in the state?") and run the KF machinery on that local linear approximation. For the differential-drive robot: <strong>the kinematic relations between wheel speeds and V, φ̇ are linear → the standard KF works</strong>; but with the state vector <strong>[x, y, φ]</strong> the position update involves <strong>cosφ, sinφ</strong> ("curved" relations) → <strong>non-linear → EKF needed</strong>; the <strong>dynamic model</strong> (forces/torques) is likewise non-linear → EKF.</p>
+  <p><strong>Where they are used (L8)</strong>: <strong>sensor fusion</strong> — GNSS gives an occasional global reference (noisy, low-rate), wheel encoders/IMU track the movement between GNSS updates, and the internal (process) model removes noise; the KF merges all three. <strong>SLAM</strong> — drop GNSS too, and localise + map simultaneously from <strong>re-observed landmarks</strong> (in EKF-SLAM the state vector holds, besides [x,y,φ], each landmark's coordinates — size 3+2n, growing as landmarks are found; re-observing a landmark where it should be decreases the uncertainty).</p>
+</div>
+<h3>Past-exam drill</h3>
+<ul class="qlist">
+  <li><span class="badge year">24 Q21 / 25 Q21 / 26 Q42</span> <span class="en">"A Kalman filter is often used when sensors have too low update frequency."</span> <span class="badge t">T</span></li>
+  <li><span class="badge year">24 Q23 / 25 Q23</span> <span class="en">"... when sensors are noisy."</span> <span class="badge t">T</span></li>
+  <li><span class="badge year">24 Q26 / 25 Q26</span> <span class="en">"A Kalman filter can be used for localization of a robot."</span> <span class="badge t">T</span></li>
+  <li><span class="badge year">24 Q22</span> <span class="en">"... when there is no good model of the robot motion."</span> <span class="badge t">T/F both accepted</span><span class="zh">The examiner announced both answers are accepted.</span></li>
+  <li><span class="badge year">25 Q22 / 26 Q43</span> <span class="en">"A Kalman filter can not be used in a robot, since it requires recorded data."</span> <span class="badge f">F</span><span class="zh">The KF is online and recursive — it runs live just fine.</span></li>
+  <li><span class="badge year">24 Q24 / 25 Q24 / 26 Q45</span> <span class="en">"The process model and observation model are two ways of modelling the sensors."</span> <span class="badge f">F</span><span class="zh">The process model models <strong>motion</strong>.</span></li>
+  <li><span class="badge year">24 Q25 / 25 Q25 / 26 Q46</span> <span class="en">"The Kalman gain is used to increase the frequency of sensors."</span> <span class="badge f">F</span><span class="zh">The gain is a trust weight.</span></li>
+  <li><span class="badge year">26 Q44</span> <span class="en">"A Kalman filter first runs the step Update and then the step Predict."</span> <span class="badge f">F</span><span class="zh">Predict first, then Update.</span></li>
+  <li><span class="badge year">26 Q47</span> <span class="en">"The standard Kalman filter works well with the <strong>kinematic model</strong> of the differentially steered robot."</span> <span class="badge t">T</span><span class="zh">The kinematic relations are linear.</span></li>
+  <li><span class="badge year">26 Q48</span> <span class="en">"... works well with the <strong>dynamic model</strong> ..."</span> <span class="badge f">F</span><span class="zh">The dynamic model needs the EKF (the standard KF eats linear only).</span></li>
+  <li><span class="badge year">26 Q49</span> <span class="en">"... works well with the <strong>state vector [x, y, φ]</strong>."</span> <span class="badge f">F</span><span class="zh">The position update with φ is non-linear → EKF.</span></li>
+</ul>
+
+<!-- ============ Section 6 ============ -->
+<h2 id="s6">§6 · Control / steering / PID + simulation + path planning (L6)</h2>
+<div class="principle">
+  <p><strong>Lateral vs longitudinal (L6)</strong>: <strong>longitudinal control</strong> = local speed adaptation along the X axis (forwards); <strong>lateral control</strong> = steering, staying on the path. Navigation splits into three concepts: <strong>localisation</strong> (find yourself in the map) → <strong>path planning</strong> (find an efficient path from there to the target — global) → <strong>path following</strong> (apply actuation to follow it — local).</p>
+  <p><strong>Three steering models (all from research on how humans drive, starting with Kondo in the 1950s)</strong>:<br>
+  · <strong>Aim point model</strong>: fixate <strong>one</strong> point ahead; control law δ = k·ε (ε is the angular error towards the point) — <strong>only 1 tunable parameter, k</strong>.<br>
+  · <strong>Preview model</strong>: take <strong>a series</strong> of preview points along the road ahead (the most famous model uses <strong>8 points</strong>) → naturally more parameters. Hence "the aim point model has fewer parameters than the preview model" = T, and "the aim point model contains two tunable parameters" = F.<br>
+  · <strong>Two-point model (Salvucci &amp; Gray, 2004)</strong>: mimics human gaze — the <strong>far point</strong> is the visual fixation (its position is situation-dependent) and serves to <strong>monitor lateral stability and predict the upcoming road curvature</strong>; the <strong>near point</strong> is the centre of the road just ahead, monitored <strong>peripherally</strong> (no fixation) for the current lateral position. <strong>The output is a steering rate</strong>: you move the wheel only when the near/far point <strong>moves</strong> in your view, or the near point is not straight ahead — the slides' punchline: steering is not about moving the vehicle, but about moving the <strong>perceived world</strong>.</p>
+  <p><strong>PID and the rate limiter</strong>: the slides say "in most cases, a PID controller is perfectly fine". P corrects in proportion to the current error (the workhorse); I accumulates past error to remove steady-state offset; <strong>D damps according to the error's rate of change → resists oscillations</strong>. Steering relies on P and D — I is not the star. A <strong>rate limiter</strong> caps how fast the control output may change: vision-based perception is frame-by-frame and jumpy (detections flicker, positions jitter), and driving the steering directly from it makes the robot twitch — the rate limiter smooths the spikes.</p>
+  <p><strong>Modular simulation (the L4 principle, one sentence)</strong>: a microservice <strong>does not know where its data comes from — it only cares about message type and content</strong> — so any microservice can be swapped for a simulated counterpart (virtual camera, virtual wheel encoder, virtual vehicle... the same principle as data replay), and <strong>parts of the system can run simulated alongside physical parts</strong>. That is why it fits microservice architectures naturally and makes SIL/HIL easy. Contrast <strong>monolithic simulation</strong> (self-contained worlds like Gazebo, AirSim): you build a whole separate world and risk the "simulation rabbit hole" (endlessly optimising the simulation itself).</p>
+  <p><strong>Path planning (L6)</strong>: <strong>Dijkstra</strong> — starting from the start node, repeat two moves: relax all unvisited neighbours of the current node (if a shorter path is found, update its distance and record the predecessor), then pick the unvisited node with the smallest distance as the new current node; guarantees the shortest path but touches many nodes → basic, slow. <strong>A* = Dijkstra + a heuristic</strong> (an estimate of the remaining distance to the goal, so promising directions are explored first) → commonly used, quick. <strong>D* Lite</strong> suits real-world applications (incremental replanning as the environment changes). All of them <strong>find paths</strong> — none of them controls speed.</p>
+</div>
+<h3>Drill · control / steering</h3>
+<ul class="qlist">
+  <li><span class="badge year">25 Q18</span> <span class="en">"In a PID controller, the D part is resisting oscillations."</span> <span class="badge t">T</span><span class="zh">D = damping.</span></li>
+  <li><span class="badge year">26 Q38</span> <span class="en">"For a PID controller, the I part is the most important component when steering a robot."</span> <span class="badge f">F</span><span class="zh">Steering relies on P and D.</span></li>
+  <li><span class="badge year">25 Q19 / 26 Q39</span> <span class="en">"A rate limiter is important/useful when working with vision-based perception."</span> <span class="badge t">T</span> <span class="badge warn">⚠️(26)</span><span class="zh">Vision output jumps; the rate limiter smooths it.</span></li>
+  <li><span class="badge year">24 Q20 / 25 Q20 / 26 Q40</span> <span class="en">"The two-point model uses a near and a far point, where the output is given as control rate."</span> <span class="badge t">T</span><span class="zh">The same sentence in all three years.</span></li>
+  <li><span class="badge year">24 Q19 / 26 Q41</span> <span class="en">"The aim point model has fewer parameters than the preview model." (24: T) / "The aim point model contains two tunable parameters." (26: F)</span><span class="zh">Aim point has <strong>fewer</strong> parameters than preview (one, in fact) — "two" makes the 26 statement F.</span></li>
+</ul>
+<h3>Drill · simulation</h3>
+<ul class="qlist">
+  <li><span class="badge year">24 Q17 / 25 Q17</span> <span class="en">"Modular simulation works poorly for a microservice architecture."</span> <span class="badge f">F</span><span class="zh">They fit together naturally (the simulator itself is a microservice).</span></li>
+  <li><span class="badge year">24 Q18</span> <span class="en">"Modular simulation is a good complement when running hardware-in-the-loop tests."</span> <span class="badge t">T</span></li>
+  <li><span class="badge year">26 Q37</span> <span class="en">"Modular simulation makes SIL more challenging, compared to monolithic simulation."</span> <span class="badge f">F</span><span class="zh">Modular simulation makes SIL easier.</span></li>
+</ul>
+<h3>Drill · path planning (2025 only; Q38/Q39 traced on the given graph)</h3>
+<ul class="qlist">
+  <li><span class="badge year">25 Q38</span> <span class="en">"When running Dijkstra ... (A to H), the distance to H is updated twice."</span> <span class="badge t">T</span><span class="zh">Tracing the graph: H's distance is updated twice.</span></li>
+  <li><span class="badge year">25 Q39</span> <span class="en">"... all nodes except one needs to be visited."</span> <span class="badge f">F</span></li>
+  <li><span class="badge year">25 Q40</span> <span class="en">"Dijkstra's algorithm is the most efficient algorithm for finding the shortest distance for a robot."</span> <span class="badge f">F</span><span class="zh">A* is quicker.</span></li>
+  <li><span class="badge year">25 Q41</span> <span class="en">"Dijkstra's algorithm is often used when controlling the speed of a robot."</span> <span class="badge f">F</span><span class="zh">It is a <strong>path-planning</strong> algorithm.</span></li>
+</ul>
+
+<!-- ============ Section 7 ============ -->
+<h2 id="s7">§7 · Decision making: FSM / BBR / Symbolic AI / evolutionary robotics / ANN (★3 missed in June, L7)</h2>
+<div class="principle">
+  <p><strong>The three paradigms</strong>: <strong>Symbolic AI</strong> — centralised, functionally decomposed, with clearly defined data-processing stages (sense → model → plan → act): build a model of the world first, then reason and plan on the model. <strong>BBR</strong> — decentralised: a set of <strong>atomic behaviours</strong> (the smallest sense→act units, e.g. "avoid", "seek light") run <strong>in parallel</strong> (several can be active at once), and overall intelligence arises by <strong>emergence</strong> (complex whole-system behaviour that nobody programmed appears from simple interacting parts); the inspiration is <strong>ethology</strong> (animal behaviour), not human psychology. <strong>Behaviour selection/coordination is the central difficulty</strong> — the slides: "behavioural modelling comes down to coordination and tuning of simple isolated components" — hence "behaviour selection is trivial" = F. <strong>Evolutionary/embodied robotics (ER)</strong> — embodied intelligence argues intelligence can only be discussed relative to a physical body engaged in contextual behaviour; behaviours grow by evolution, with <strong>no predefined behaviours or data-processing stages</strong>.</p>
+  <p><strong>FSM (the L7 definition)</strong>: a graph of <strong>discrete logical states</strong>; each state = one concrete isolated behaviour (e.g. roaming, turning left); <strong>specific conditions</strong> (e.g. a stimulus above a threshold) trigger a <strong>transition</strong> to another state; the FSM imposes no hierarchy of behaviours. It can be implemented as <strong>if-statements acting on globally available variables</strong>. Its parameters (thresholds etc.) are set by hand — "an FSM automatically tunes its own parameters" = F.</p>
+  <p><strong>Subsumption architecture (L7, per the slides)</strong>: a <strong>reactive</strong> behaviour architecture — behaviours are <strong>ordered hierarchically</strong>; each behaviour has an <strong>activation criterion</strong> and is either active or inactive; behaviours <strong>run in parallel</strong>, but <strong>higher-order behaviours suppress the output of lower-level behaviours while active</strong>; <strong>modular: new behaviours can be added on top of existing ones</strong> (incremental design); tuning the activation criteria is crucial to the overall system behaviour. Each behaviour can internally be an FSM — the slides' example: the "Escape" behaviour = a 4-state FSM (waiting for a bumper hit → turning right → backing up → turning left, with transitions triggered by hit direction and timeouts) → hence "a subsumption architecture can be modelled from a set of FSMs" = T.</p>
+  <p><strong>Braitenberg vehicles (1984)</strong>: sensors wired <strong>directly</strong> to motors — the concept of a decision is reduced to a sensor→actuator mapping, and <strong>the mapping itself is the behaviour</strong> (no internal state, so "Braitenberg vehicles are implemented as FSMs" = F). In a complex environment with several stimulus sources they exhibit seemingly intelligent, complex, dynamic behaviour. The lesson, per Braitenberg's book: <strong>guessing the internal structure from observing behaviour is much harder than creating the structure that produces the behaviour</strong> — easy to build, hard to analyse; so "simple atomic behaviours result in easily explainable overall behaviours" = F.</p>
+  <p><strong>How evolution "grows" behaviour (the L7 GA loop)</strong>: generate a random initial population → <strong>decode each chromosome into a behavioural model</strong> → run and evaluate it in the actual environment → assign a <strong>fitness</strong> score → favour the fittest, apply crossover/mutation, produce the next generation. Strengths: handles <strong>non-differentiable</strong> objectives and problems without a complete mathematical model (e.g. evaluated in simulation or HIL); its parallel search copes with many local optima.</p>
+  <p><strong>ANN (L7)</strong>: a fully connected network is "a more general mapping between input and output", a blank-slate structure for behaviour — it can hold <strong>many parallel and blended behaviours</strong> at once; what you tune are each neuron's <strong>weights + bias</strong> (y = φ(w·x+b)), with an activation function (e.g. sigmoid) keeping inputs/outputs within [0, 1]. <strong>A sufficiently large fully connected ANN can achieve any input→output mapping (universal approximation)</strong> — T on the exam.</p>
+</div>
+<h3>Drill · FSM</h3>
+<ul class="qlist">
+  <li><span class="badge year">24 Q27 / 25 Q27 / 26 Q50</span> <span class="en">"A finite-state machine (FSM) is used to describe the transitions between behaviours."</span> <span class="badge t">T</span></li>
+  <li><span class="badge year">24 Q28 / 25 Q28 / 26 Q51</span> <span class="en">"An FSM is often a set of if-statements." / "An FSM can be implemented as if-statements acting on globally available variables."</span> <span class="badge t">T</span></li>
+  <li><span class="badge year">24 Q29 / 25 Q29</span> <span class="en">"An FSM automatically tunes its own parameters."</span> <span class="badge f">F</span><span class="zh">FSM parameters are set by hand.</span></li>
+</ul>
+<h3>Drill · BBR / Braitenberg</h3>
+<ul class="qlist">
+  <li><span class="badge year">24 Q30 / 25 Q30 / 26 Q53</span> <span class="en">"Behaviour-based robotics (BBR) is inspired from human psychology."</span> <span class="badge f">F</span><span class="zh">Inspired by <strong>ethology</strong> (animal behaviour).</span></li>
+  <li><span class="badge year">24 Q31 / 26 Q56</span> <span class="en">"BBR can be modelled from an FSM." / "A Subsumption architecture can be modelled from a set of FSMs."</span> <span class="badge t">T</span> <span class="badge warn">⚠️(26 Q56)</span><span class="zh">Both can be built from FSMs.</span></li>
+  <li><span class="badge year">24 Q32 / 25 Q32 / 26 Q54</span> <span class="en">"BBR uses atomic behaviours as building blocks."</span> <span class="badge t">T</span></li>
+  <li><span class="badge year">24 Q33</span> <span class="en">"BBR is a method for decision making."</span> <span class="badge t">T</span></li>
+  <li><span class="badge year">25 Q36</span> <span class="en">"In BBR, a set of isolated robotic behaviours run in sequence."</span> <span class="badge f">F</span><span class="zh">They run in <strong>parallel</strong>.</span></li>
+  <li><span class="badge year">26 Q55</span> <span class="en">"In BBR, behaviour selection is trivial."</span> <span class="badge f">F</span><span class="zh">Coordination is the central difficulty.</span></li>
+  <li><span class="badge year">26 Q52</span> <span class="en">"Breitenberg vehicles are implemented as simple FSMs."</span> <span class="badge f">F</span><span class="zh">Braitenberg = pure sensor-to-motor wiring, not an FSM.</span></li>
+  <li><span class="badge year">25 Q33 / 26 Q57</span> <span class="en">"Breitenberg vehicles show us that simple atomic behaviours result in easily explainable overall behaviours."</span> <span class="badge f">F</span> <span class="badge warn">⚠️(26)</span><span class="zh">The lesson is the opposite: easy to build, hard to explain from the outside.</span></li>
+</ul>
+<h3>Drill · Symbolic AI / evolution / ANN</h3>
+<ul class="qlist">
+  <li><span class="badge year">25 Q34 / 26 Q58</span> <span class="en">"In Symbolic AI, intelligence is decomposed into functional modules with <strong>no</strong> clearly defined data processing stages."</span> <span class="badge f">F</span><span class="zh">Symbolic AI <strong>does</strong> have clearly defined stages — the "no" flips it.</span></li>
+  <li><span class="badge year">25 Q35 / 26 Q59</span> <span class="en">"In evolutionary/embodied robotics, there are no clearly defined behaviours or data processing stages."</span> <span class="badge t">T</span></li>
+  <li><span class="badge year">25 Q37 / 26 Q60</span> <span class="en">"A fully connected ANN with X hidden layers can achieve any mapping between inputs and outputs."</span> <span class="badge t">T</span> <span class="badge warn">⚠️(26)</span><span class="zh">Universal approximation.</span></li>
+</ul>
+
+<!-- ============ Section 8 ============ -->
+<h2 id="s8">§8 · A short history of robots (★2 missed in June, L1)</h2>
+<div class="principle">
+  <p><strong>The four pioneers (L1, detailed)</strong>:<br>
+  · <strong>The Tortoise</strong> (W. Grey Walter, 1948–49): <strong>the first electronic autonomous robots</strong>. Their very purpose was to prove that rich connections between a small number of "brain cells" could give rise to very complex behaviours — <strong>emergence</strong>. Capable of <strong>phototaxis</strong>: they could find their way to a recharging station when low on battery. Built entirely with <strong>analogue circuits</strong> — the microcontroller was invented in 1971, 23 years later, so "the Tortoise is famous for being first with a microcontroller" = F.<br>
+  · <strong>The Stanford Cart</strong> (1960–80, three phases): 1960–63, research on video-based teleoperation for remote moon missions; 1964–71, automatically following a high-contrast white line at slow speed under controlled lighting; 1971–80, visual navigation with a TV camera, slowly steering around obstacles in a lab.<br>
+  · <strong>Shakey</strong> (Stanford Research Institute, Nils Nilsson et al., 1966–72): <strong>the first general-purpose mobile robot able to reason about its own actions</strong>; it could also process natural language — breaking written commands down into basic tasks. Huge impact on robotics and AI: <strong>the A* search algorithm and the Hough transform both came out of this project</strong>. Like the Kiwi, it is a wheeled mobile robot carrying a camera and distance sensors (26 Q2, "clear physical similarities" = T).<br>
+  · <strong>Braitenberg vehicles</strong> (1984, Valentino Braitenberg's book): sensors wired straight to motors; simple structure, complex behaviour (see §7).</p>
+  <p><strong>Hype vs what actually shipped (the L1 timeline)</strong>: <strong>80s</strong> personal companion robot hype → <strong>90s</strong> deep-neural-network hype + personal work robot hype → <strong>00s</strong> first humanoid hype (ASIMO wowed the public; later evolving into more useful things like Boston Dynamics' dog) → <strong>10s</strong> autonomous cars + machine-learning hype → <strong>20s</strong> the LLM "AI" hype + a second humanoid hype. <strong>What actually succeeded commercially were modest products solving real problems: Husqvarna's robotic lawn mowers and iRobot's Roomba</strong> — so "personal robots really took off in the 90s" = F (it was hype only).</p>
+</div>
+<h3>Past-exam drill</h3>
+<ul class="qlist">
+  <li><span class="badge year">26 Q1</span> <span class="en">"The Tortoise is famous for being first with using a microcontroller."</span> <span class="badge f">F</span><span class="zh">Analogue circuits; the microcontroller arrived only in 1971.</span></li>
+  <li><span class="badge year">26 Q2</span> <span class="en">"Shakey was a robot with clear physical similarities to the Kiwi D2 robot."</span> <span class="badge t">T</span> <span class="badge warn">⚠️</span><span class="zh">Both are wheeled mobile robots carrying a camera + distance sensors. (Hook: "wheels + camera".)</span></li>
+  <li><span class="badge year">26 Q3</span> <span class="en">"So called personal robots was a concept that really took off in the 90s."</span> <span class="badge f">F</span> <span class="badge warn">⚠️</span><span class="zh">The 80s/90s were <strong>hype</strong> — no real adoption.</span></li>
+</ul>
+
+<!-- ============ Appendix ============ -->
+<h2 id="quick">Appendix · 30-minute pre-exam review (ordered by past mistakes)</h2>
+<div class="card">
+<ol>
+  <li><strong>The software-engineering chain (most mistakes)</strong>: git versions source code, binary traceability comes from CI-CD; CI <strong>includes automated testing</strong>; HIL can join automated testing; cross-compilation = crossing CPU architectures (amd64→arm64), routine work; <code>docker run</code> creates a <strong>container</strong>, use small <strong>Alpine</strong>; microservices share a protocol, help OTA-CICD, and are about deployment/isolation ("planning algorithms" is F all three years); <strong>OTA = pushing software down</strong> (data coming back = monitoring).</li>
+  <li><strong>Computing hardware</strong>: PLD = reconfigurable circuitry, fastest | microcontroller = <strong>bare metal → real-time</strong> | CPU = OS multitasking but poor real-time | GPU = matrices/vision.</li>
+  <li><strong>Kinematics</strong>: V=(v<sub>R</sub>+v<sub>L</sub>)/2 (no R), φ̇=(v<sub>R</sub>−v<sub>L</sub>)/2R (denominator 2R), position = integral of velocity; v<sub>R</sub>=V+φ̇R.</li>
+  <li><strong>Kalman</strong>: Predict then Update; process = motion, observation = sensors; gain = trust weight, not frequency; <strong>kinematic model linear → standard KF works</strong>; [x,y,φ] with φ / dynamic model non-linear → EKF.</li>
+  <li><strong>Decision making</strong>: Symbolic AI has stages | BBR: parallel, emergent, from ethology, selection non-trivial, buildable from FSMs/subsumption, Braitenberg <strong>hard to explain</strong> | ER: no predefined stages | <strong>large ANN = universal approximator</strong>.</li>
+  <li><strong>Control</strong>: two-point model = near + far point, output is a <strong>rate</strong>; D damps; rate limiter smooths vision; aim point has <strong>fewer</strong> parameters (not two); modular simulation fits microservices, makes SIL easier.</li>
+  <li><strong>Sensors</strong>: ultrasonic outranges IR; Bayer = <strong>most green</strong>; rolling shutter is <strong>faster</strong>; intrinsic = the camera itself, extrinsic = links to other sensors.</li>
+  <li><strong>History</strong>: Tortoise = analogue circuits proving emergence; Shakey reasons about actions and <strong>shares the wheeled-camera-robot form with the Kiwi (similar = T)</strong>; personal robots in the 90s were hype only.</li>
+  <li><strong>Exam strategy</strong>: no penalty for wrong answers — <strong>if the principle gives you any confidence, mark TRUE; never leave blanks</strong> (12 points were lost to blanks last time); on seeing <code>can</code>, ask "would it take a bad practice to make this true? If yes → FALSE".</li>
+</ol>
+</div>
+
+<!-- ============ Glossary ============ -->
+<h2 id="terms">Glossary of abbreviations (look things up here)</h2>
+<p>Each entry = <strong>abbreviation | full name (the memory anchor) | what it actually is, in one line</strong>. Abbreviations are hard to remember when you only memorise three letters — read the full name a few times and the abbreviation starts meaning something.</p>
+
+<h3>Computing hardware</h3>
+<dl class="terms">
+  <dt>PLD | Programmable Logic Device</dt>
+  <dd>A chip that can be reconfigured into any special-purpose <strong>circuit</strong> (it is hardware circuitry, often mistaken for a small computer). Extremely fast and power-efficient.</dd>
+  <dt>FPGA | Field-Programmable Gate Array</dt>
+  <dd>A kind of PLD; "gate array" = a large field of logic gates you wire as you like. Treat as a synonym of PLD here.</dd>
+  <dt>CPU | Central Processing Unit</dt>
+  <dd>The general-purpose brain that runs an operating system; manages many programs at once, but with poor real-time guarantees.</dd>
+  <dt>GPU | Graphics Processing Unit</dt>
+  <dd>Specialised in massively parallel matrix operations; excels at vision and neural networks.</dd>
+  <dt>MCU | Microcontroller Unit</dt>
+  <dd><strong>A whole "computer" shrunk onto one small chip</strong> (CPU + memory + I/O integrated), dedicated to controlling one device. On power-up it runs a fixed program <strong>directly on bare hardware</strong> (i.e. "no OS"); predictable behaviour → real-time capable.</dd>
+  <dt>OS | Operating System</dt>
+  <dd>System software that manages hardware and schedules many programs (e.g. Linux); it constantly interrupts/switches programs for fairness — great for multitasking, but "when is my turn" becomes uncertain → hard real-time is difficult.</dd>
+  <dt>real-time</dt>
+  <dd><strong>Guaranteed completion within a set deadline (punctual, predictable)</strong>. An OS-less microcontroller can be real-time; an OS-based CPU can hardly guarantee it. (Real-time = on time, not "fast".)</dd>
+  <dt>ROM / RAM | Read-Only / Random-Access Memory</dt>
+  <dd>ROM holds the fixed program (survives power-off); RAM is the temporary working memory (lost at power-off).</dd>
+</dl>
+
+<h3>Sensors &amp; cameras</h3>
+<dl class="terms">
+  <dt>IR | Infrared (distance sensor)</dt>
+  <dd>Emits infrared light and measures the reflection. Course unit: Sharp GP2Y0A41SK0F — range only <strong>4–30 cm</strong>, analogue voltage output, non-linear in distance. Minimum range above zero.</dd>
+  <dt>Ultrasonic (distance sensor)</dt>
+  <dd>Emits 40 kHz sound pulses and times the echo. Course unit: Devantech SRF08 — range <strong>3 cm–6 m</strong> (far longer than IR), built-in microprocessor, I²C interface.</dd>
+  <dt>RGB | Red-Green-Blue</dt>
+  <dd>The three primary colour channels. The sensor produces colour via the Bayer filter array (2×2 = 2 green, 1 red, 1 blue).</dd>
+  <dt>ISP | Image Signal Processor</dt>
+  <dd>Turns the raw Bayer output into a normal photo: demosaicing (Bayer→RGB), white balance, gamma correction, tone mapping, noise reduction. Vision algorithms almost always use post-ISP data.</dd>
+  <dt>rolling / global shutter</dt>
+  <dd>Rolling: rows exposed and read one by one (each row a slightly different moment) → cheap, fast, skews motion. Global: all pixels exposed at the same instant, then read out together → no distortion, but more expensive and slower.</dd>
+  <dt>HSV | Hue-Saturation-Value</dt>
+  <dd>A colour representation separating intensity (luma) from colour (chroma) — colour independent of brightness, so colour filtering stays stable under lighting changes; much handier than RGB.</dd>
+</dl>
+
+<h3>Software engineering (the second-weakest block — read carefully)</h3>
+<dl class="terms">
+  <dt>Docker | containerisation tool</dt>
+  <dd>Packs a program together with <strong>all its dependencies</strong> into one "shipping container" that runs identically on any machine — the cure for "works on my machine".</dd>
+  <dt>image vs container</dt>
+  <dd>An <strong>image</strong> is a packaged <strong>static template</strong> (like an install disc); a <strong>container</strong> is a <strong>running instance</strong> of the image (like the installed, running system). <code>docker run</code> = create and start a container from an image; <code>docker build</code> is what makes images.</dd>
+  <dt>Alpine / Ubuntu | two Linux distributions</dt>
+  <dd>Common Docker <strong>base images</strong>: Ubuntu is big and full-featured; Alpine is minimal (tiny). Robots want small → <strong>Alpine</strong>.</dd>
+  <dt>multi-stage build</dt>
+  <dd>One Dockerfile with <strong>two FROMs</strong> — the first stage (builder) installs the build tools and compiles; the second copies over <strong>only the compiled program</strong>. Result: <strong>a final image containing just the program → very small</strong> (the build tools stay behind in the builder stage). (This is exactly what the 24/25 Dockerfile figure questions test.)</dd>
+  <dt>microservice</dt>
+  <dd>Splitting one big program into <strong>many independent small programs, each handling a single task</strong>, developed/deployed/replaced individually and communicating via a common message protocol. (Opposite = monolithic: welded into one block.)</dd>
+  <dt>technical debt</dt>
+  <dd>The "debt" incurred by taking shortcuts — convenient now, repaid later with interest (refactoring, bug fixing).</dd>
+  <dt>CI | Continuous Integration</dt>
+  <dd>Owns the <strong>"build + test"</strong> stage — every commit triggers an automatic build and test run, ensuring new and old code fit together. Output: a tested binary.</dd>
+  <dt>CD | Continuous Deployment</dt>
+  <dd>Owns the <strong>"release"</strong> stage — automatically deploys the CI-produced, test-passing binary to the product (the robot).</dd>
+  <dt>CI/CD in one line</dt>
+  <dd><strong>CI comes first and produces a verified binary; CD comes after and delivers it to the robot automatically.</strong> Together = a fully automatic pipeline from commit to deployment.</dd>
+  <dt>CE | Continuous Experimentation</dt>
+  <dd>After release, ship to only part of the fleet first (canary/gradual rollout) and evaluate with data before going wide.</dd>
+  <dt>OTA | Over-The-Air (update)</dt>
+  <dd><strong>Remotely delivering/installing new software onto robots in the field</strong> — the direction is <strong>software going down</strong>. (Contrast: software down = OTA; data coming back = remote monitoring.)</dd>
+  <dt>HIL | Hardware-In-the-Loop</dt>
+  <dd>Wiring <strong>real hardware</strong> into the test loop; can be automated.</dd>
+  <dt>SIL | Software-In-the-Loop</dt>
+  <dd>Running the real code entirely inside a software simulation (hardware replaced by simulation).</dd>
+  <dt>Data replay</dt>
+  <dd>Replaying previously recorded real data for testing — open-loop, fully reproducible.<br><strong>Memory chain</strong>: SIL (pure software) → HIL (real hardware attached) → data replay (recorded data fed in) — all are testing/verification means, increasingly close to reality.</dd>
+  <dt>KPI | Key Performance Indicator</dt>
+  <dd>A quantitative measure of how well robots perform in the field.</dd>
+  <dt>SSH | Secure Shell</dt>
+  <dd>The tool for <strong>logging in remotely</strong> and typing commands on the robot (that is its actual job).</dd>
+  <dt>UDP | User Datagram Protocol</dt>
+  <dd>A fast "send and don't wait for receipts" network transport; libcluon uses its multicast to pass messages between microservices.</dd>
+  <dt>ROS | Robot Operating System</dt>
+  <dd>A large but <strong>monolithic</strong> robot software framework — appears in the course as the contrast to OpenDLV.</dd>
+  <dt>OpenDLV</dt>
+  <dd>The robot software environment used in this course: a loose collection of libcluon microservices (lighter and more modular than ROS).</dd>
+  <dt>ARM64 / AMD64</dt>
+  <dd>Two <strong>CPU instruction-set architectures</strong>. Memory hook: <strong>small power-efficient devices use ARM64</strong> (Raspberry Pi / robots), <strong>big powerful servers use AMD64/x86</strong> (GitLab CI); different architectures → cross-compilation (routine work, not a "difficulty").</dd>
+</dl>
+
+<h3>Kinematics &amp; state estimation</h3>
+<dl class="terms">
+  <dt>ICR | Instantaneous Centre of Rotation</dt>
+  <dd>The point the whole vehicle rotates about at a given instant — the starting point of the kinematics derivation.</dd>
+  <dt>KF | Kalman Filter</dt>
+  <dd>The <strong>optimal estimator</strong> that formalises merging several data sources: each step predicts with a model, then corrects with measurements. <strong>Linear models only</strong> (non-linear → EKF).</dd>
+  <dt>EKF | Extended Kalman Filter</dt>
+  <dd>The non-linear version of the KF — local linearisation via Jacobian matrices; required for differential drive whenever cos/sin φ appears.</dd>
+  <dt>SLAM | Simultaneous Localisation And Mapping</dt>
+  <dd>The robot estimates its own position and builds the map at the same time as it moves.</dd>
+  <dt>GNSS | Global Navigation Satellite System</dt>
+  <dd>The umbrella term for satellite positioning (GPS is one of them); provides a global reference, but noisy and low-rate.</dd>
+  <dt>IMU | Inertial Measurement Unit</dt>
+  <dd>Measures accelerations and angular velocities; used for dead reckoning.</dd>
+</dl>
+
+<h3>Control &amp; decision making</h3>
+<dl class="terms">
+  <dt>PID | Proportional-Integral-Derivative (controller)</dt>
+  <dd>The classic three-term controller. P does the main correction, I removes steady-state error, <strong>D resists oscillations</strong>.</dd>
+  <dt>FSM | Finite-State Machine</dt>
+  <dd>Behaviour-switching logic built from "in this state, when a condition holds, jump to that state"; can be implemented as if-statements acting on global variables.</dd>
+  <dt>BBR | Behaviour-Based Robotics</dt>
+  <dd>The paradigm of many simple behaviours running in parallel with intelligence emerging as a whole; inspired by <strong>ethology</strong>.</dd>
+  <dt>ER | Evolutionary Robotics</dt>
+  <dd>The paradigm of evolving controllers with evolutionary algorithms; behaviour grows naturally (no predefined stages).</dd>
+  <dt>Symbolic AI</dt>
+  <dd>The traditional paradigm: model first, then plan; staged and centralised.</dd>
+  <dt>ANN | Artificial Neural Network</dt>
+  <dd>A sufficiently large fully connected net is a "universal approximator" that can fit any mapping.</dd>
+  <dt>GA | Genetic Algorithm</dt>
+  <dd>Random population → fitness-based selection → crossover + mutation → next generation; the usual tool of evolutionary robotics.</dd>
+  <dt>A* / Dijkstra / RRT (Rapidly-exploring Random Tree)</dt>
+  <dd>Path-planning algorithms; A* = Dijkstra + a heuristic.</dd>
+</dl>
+
+</div>
+
+<footer>TME290 / FIM764 Autonomous Robots · Principles Review Handbook · <a href="exam.html">Take the mock exam →</a> · <a href="index.html">中文版</a></footer>
+</body>
+</html>
