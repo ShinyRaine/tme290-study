@@ -103,18 +103,18 @@
 
 <h3>真题演练 · Dockerfile（多阶段构建）</h3>
 <ul class="qlist">
-  <li><span class="badge year">24 Q3 / 25 Q3</span> <span class="en">"The build tools installed ... are needed in the resulting Docker image."</span> <span class="badge f">F</span><span class="zh">build 工具只留在 builder 阶段；最终镜像只含编好的程序。</span></li>
-  <li><span class="badge year">24 Q4 / 25 Q4</span> <span class="en">"Every time a new Docker image is created ... the source code seems to be tested using pre-defined test cases."</span> <span class="badge t">T</span><span class="zh">构建时跑测试。</span></li>
-  <li><span class="badge year">24 Q2 / 25 Q2</span> <span class="en">"The word builder ... is user-specified." / "The second FROM ... will start over, creating a second Docker image."</span> <span class="badge t">T</span><span class="zh">builder 是自定义名；第二个 FROM 开启全新镜像。</span></li>
+  <li><span class="badge year">24 Q3 / 25 Q3</span> <span class="en">"The build tools installed from line 3 are installed since they are needed in the resulting Docker image (later deployed on the robot)."</span> <span class="badge f">F</span><span class="zh">build 工具只留在 builder 阶段；最终镜像只含编好的程序。</span></li>
+  <li><span class="badge year">24 Q4 / 25 Q4</span> <span class="en">"Every time a new Docker image is created, from line 14, the source code seems to be tested using pre-defined test cases."</span> <span class="badge t">T</span><span class="zh">构建时跑测试。</span></li>
+  <li><span class="badge year">24 Q2 / 25 Q2</span> <span class="en">"The word builder on line 2 is user-specified (rather than being a formal Docker keyword)." / "The second FROM (line 19) will start over, creating a second Docker image."</span> <span class="badge t">T</span><span class="zh">builder 是自定义名；第二个 FROM 开启全新镜像。</span></li>
   <li><span class="badge year">24 Q5 / 25 Q5</span> <span class="en">"Ubuntu lacks the package libstdc++, making it unable to run the compiled program."</span> <span class="badge f">F</span><span class="zh">编造的依赖说法。</span></li>
   <li><span class="badge year">24 Q6 / 25 Q6</span> <span class="en">"Line 24 immediately runs the compiled program."</span> <span class="badge f">F</span><span class="zh">CMD 声明的是“容器启动时才执行的命令”（构建阶段只是记下来）。</span></li>
   <li><span class="badge year">25 Q1</span> <span class="en">"RUN commands can be placed before the first FROM command."</span> <span class="badge f">F</span><span class="zh">RUN 必须在 FROM 之后。</span></li>
-  <li><span class="badge year">24 Q1</span> <span class="en">"Line 2 indicate what base image the resulting image will be based on."</span> <span class="badge f">F</span><span class="zh">多阶段里最终镜像基于第二个 FROM。</span></li>
+  <li><span class="badge year">24 Q1</span> <span class="en">"Line 2 indicate what base image the Docker resulting image will be based on."</span> <span class="badge f">F</span><span class="zh">多阶段里最终镜像基于第二个 FROM。</span></li>
 </ul>
 
 <h3>真题演练 · 镜像大小 / docker run / libcluon</h3>
 <ul class="qlist">
-  <li><span class="badge year">24 Q7 / 25 Q7 / 26 Q18</span> <span class="en">"Alpine images are in general smaller ... compared to Ubuntu."（24: T）/ "Ubuntu ... images are smaller than Alpine."（25: F）/ "Ubuntu-based images are recommended ... include more features."（26: F）</span><span class="zh">一句话：<strong>Alpine 小、机器人用 Alpine</strong>。</span></li>
+  <li><span class="badge year">24 Q7 / 25 Q7 / 26 Q18</span> <span class="en">"Alpine images are in general smaller in disk space compared to Ubuntu images."（24: T）/ "Ubuntu is more suitable to use on robots, as the resulting images are smaller than Alpine."（25: F）/ "Ubuntu-based Docker images are recommended to use on robots as they include more features."（26: F）</span><span class="zh">一句话：<strong>Alpine 小、机器人用 Alpine</strong>。</span></li>
   <li><span class="badge year">24 Q9 / 25 Q9</span> <span class="en">"The command docker run spawns a Docker image."</span> <span class="badge f">F</span><span class="zh">run 产出容器，造镜像的是 docker build。</span></li>
   <li><span class="badge year">26 Q20</span> <span class="en">"The command docker run creates a Docker container."</span> <span class="badge t">T</span> <span class="badge warn">⚠️</span><span class="zh">run 产出<strong>容器</strong>。</span></li>
   <li><span class="badge year">26 Q28</span> <span class="en">"Small binaries are hard to achieve when cross-compiling."</span> <span class="badge f">F</span><span class="zh">交叉编译照样能产出小二进制。</span></li>
@@ -123,7 +123,7 @@
 
 <h3>真题演练 · 微服务</h3>
 <ul class="qlist">
-  <li><span class="badge year">24 Q10 / 25 Q10 / 26 Q21</span> <span class="en">"A set of microservices ... shares a common communication protocol."</span> <span class="badge t">T</span><span class="zh">统一协议。</span></li>
+  <li><span class="badge year">24 Q10 / 25 Q10 / 26 Q21</span> <span class="en">"A set of microservices deployed in a robot shares a common communication protocol."</span> <span class="badge t">T</span><span class="zh">统一协议。</span></li>
   <li><span class="badge year">24 Q11 / 25 Q11</span> <span class="en">"A microservice should handle all the tasks needed for operating the robot."</span> <span class="badge f">F</span><span class="zh">一个服务只做一件事。</span></li>
   <li><span class="badge year">26 Q22</span> <span class="en">"A microservice should handle a single task."</span> <span class="badge t">T</span><span class="zh">同上，正说版。</span></li>
   <li><span class="badge year">24 Q12 / 25 Q12 / 26 Q23</span> <span class="en">"Microservices makes it easier to plan what algorithms should run in/on a robot."</span> <span class="badge f">F</span> <span class="badge warn">⚠️(26)</span><span class="zh"><strong>三年都是 F！</strong>微服务管的是部署/隔离/更新，算法选型另说。</span></li>
@@ -135,16 +135,16 @@
 <h3>真题演练 · 交叉编译 / git / CI / OTA / SSH</h3>
 <ul class="qlist">
   <li><span class="badge year">24 Q14</span> <span class="en">"Cross-compilation is useful since we can compile software in Alpine to work with Ubuntu."</span> <span class="badge f">F</span><span class="zh">交叉编译 = 跨 <strong>CPU 架构</strong>(amd64↔arm64)；此句说成“跨发行版(Alpine→Ubuntu)”故 F。</span></li>
-  <li><span class="badge year">25 Q14</span> <span class="en">"... compile software on one CPU type (e.g. amd64) to run on another (e.g. arm64)."</span> <span class="badge t">T</span><span class="zh">这才是定义。</span></li>
-  <li><span class="badge year">26 Q26</span> <span class="en">"Cross-compilation can be especially useful ... as an automated part of a CI/CD pipeline."</span> <span class="badge t">T</span></li>
-  <li><span class="badge year">26 Q29</span> <span class="en">"A general difficulty ... Raspberry Pi uses ARM64 while a GitLab server runs AMD64."</span> <span class="badge f">F</span><span class="zh">架构确实不同，但交叉编译是常规操作、能轻松跨过，所以“难点”说法为 F。（✓答对了）</span></li>
-  <li><span class="badge year">26 Q13</span> <span class="en">"Using git one can achieve traceability of <strong>binaries</strong> for robots."</span> <span class="badge f">F</span> <span class="badge warn">⚠️</span><span class="zh">git 管<strong>源码</strong>、不管二进制；二进制溯源靠 CI/CD（"can" 陷阱：能做到但属歪用 → F）。</span></li>
+  <li><span class="badge year">25 Q14</span> <span class="en">"Cross-compilation is useful since we can compile software on one CPU type (e.g. amd64) to run on another (e.g. arm64)."</span> <span class="badge t">T</span><span class="zh">这才是定义。</span></li>
+  <li><span class="badge year">26 Q26</span> <span class="en">"Cross-compilation can be especially useful in robotics when configured as an automated part of a CI/CD pipeline."</span> <span class="badge t">T</span></li>
+  <li><span class="badge year">26 Q29</span> <span class="en">"A general difficulty when deploying a C++-based microservice to the Kiwi robot is that the Raspberry Pi uses an ARM64 CPU, while a GitLab server runs on an AMD64 CPU."</span> <span class="badge f">F</span><span class="zh">架构确实不同，但交叉编译是常规操作、能轻松跨过，所以“难点”说法为 F。（✓答对了）</span></li>
+  <li><span class="badge year">26 Q13</span> <span class="en">"Using git one can achieve traceability (version identification) of <strong>binaries</strong> for robots."</span> <span class="badge f">F</span> <span class="badge warn">⚠️</span><span class="zh">git 管<strong>源码</strong>、不管二进制；二进制溯源靠 CI/CD（"can" 陷阱：能做到但属歪用 → F）。</span></li>
   <li><span class="badge year">26 Q14</span> <span class="en">"GitLab and GitHub are examples of web-based frontends for git-based CI."</span> <span class="badge t">T</span></li>
   <li><span class="badge year">26 Q15</span> <span class="en">"CI includes automated testing of binaries."</span> <span class="badge t">T</span> <span class="badge warn">⚠️</span><span class="zh">自动测试是 CI 核心。</span></li>
   <li><span class="badge year">26 Q16</span> <span class="en">"HIL can be used as part of automated testing."</span> <span class="badge t">T</span> <span class="badge warn">⚠️</span><span class="zh">硬件在环可自动化。</span></li>
   <li><span class="badge year">26 Q17</span> <span class="en">"OTA is the process of reading performance data from robots in the field."</span> <span class="badge f">F</span> <span class="badge warn">⚠️</span><span class="zh">OTA 是<strong>下发软件</strong>；读数据回来是监控。</span></li>
   <li><span class="badge year">25 Q42</span> <span class="en">"There are at least three ways of getting a C++-based microservice to the Kiwi robot."</span> <span class="badge t">T</span><span class="zh">部署方式不止一种。</span></li>
-  <li><span class="badge year">25 Q43 / 26 Q30</span> <span class="en">"SSH is a tool for cross-compilation."（F）/ "SSH is a tool primarily used for software deployment."（F）</span> <span class="badge f">F</span><span class="zh">SSH 本职是<strong>远程登录操作</strong>。</span></li>
+  <li><span class="badge year">25 Q43 / 26 Q30</span> <span class="en">"SSH is a tool for cross-compilation."（F）/ "SSH is a tool primarily used for software deployment, for example in robots."（F）</span> <span class="badge f">F</span><span class="zh">SSH 本职是<strong>远程登录操作</strong>。</span></li>
 </ul>
 
 <!-- ============ 第4节 ============ -->
@@ -163,7 +163,7 @@
   <li><span class="badge year">24 Q16 / 25 Q16</span> <span class="en">"The yaw rate is calculated as φ̇=(v_R−v_L)/R"</span> <span class="badge f">F</span><span class="zh">分母应是 <strong>2R</strong>。</span></li>
   <li><span class="badge year">26 Q34</span> <span class="en">"It can be shown that v_R = V + φ̇R"</span> <span class="badge t">T</span><span class="zh">由 V、φ̇ 反解单轮速。</span></li>
   <li><span class="badge year">26 Q35</span> <span class="en">"The yaw rate is calculated as φ̇=(v_R−v_L)/2R"</span> <span class="badge t">T</span><span class="zh">分母 2R，对。</span></li>
-  <li><span class="badge year">26 Q36</span> <span class="en">"x₁ = x₀ + ∫ (v_R+v_L)/2·cosφ dt"</span> <span class="badge t">T</span> <span class="badge warn">⚠️</span><span class="zh">位置 = 速度 Vx 的积分。</span></li>
+  <li><span class="badge year">26 Q36</span> <span class="en">"When integrating the x position of a differentially steered robot in simulation, the following can be used: x₁ = x₀ + ∫ (v_R(t)+v_L(t))/2 · cos φ(t) dt"</span> <span class="badge t">T</span> <span class="badge warn">⚠️</span><span class="zh">位置 = 速度 Vx 的积分。</span></li>
 </ul>
 
 <!-- ============ 第5节 ============ -->
@@ -179,16 +179,16 @@
 <h3>真题演练</h3>
 <ul class="qlist">
   <li><span class="badge year">24 Q21 / 25 Q21 / 26 Q42</span> <span class="en">"A Kalman filter is often used when sensors have too low update frequency."</span> <span class="badge t">T</span></li>
-  <li><span class="badge year">24 Q23 / 25 Q23</span> <span class="en">"... when sensors are noisy."</span> <span class="badge t">T</span></li>
+  <li><span class="badge year">24 Q23 / 25 Q23</span> <span class="en">"A Kalman filter is often used when sensors are noisy."</span> <span class="badge t">T</span></li>
   <li><span class="badge year">24 Q26 / 25 Q26</span> <span class="en">"A Kalman filter can be used for localization of a robot."</span> <span class="badge t">T</span></li>
-  <li><span class="badge year">24 Q22</span> <span class="en">"... when there is no good model of the robot motion."</span> <span class="badge t">T/F 均判对</span><span class="zh">考官声明两个答案都接受。</span></li>
+  <li><span class="badge year">24 Q22</span> <span class="en">"A Kalman filter is often used when there is no good model of the robot motion."</span> <span class="badge t">T/F 均判对</span><span class="zh">考官声明两个答案都接受。</span></li>
   <li><span class="badge year">25 Q22 / 26 Q43</span> <span class="en">"A Kalman filter can not be used in a robot, since it requires recorded data."</span> <span class="badge f">F</span><span class="zh">KF 在线递归、边跑边算即可（照样能上机器人）。</span></li>
   <li><span class="badge year">24 Q24 / 25 Q24 / 26 Q45</span> <span class="en">"The process model and observation model are two ways of modelling the sensors."</span> <span class="badge f">F</span><span class="zh">process model 建的是<strong>运动</strong>。</span></li>
   <li><span class="badge year">24 Q25 / 25 Q25 / 26 Q46</span> <span class="en">"The Kalman gain is used to increase the frequency of sensors."</span> <span class="badge f">F</span><span class="zh">gain 是信任权重。</span></li>
   <li><span class="badge year">26 Q44</span> <span class="en">"A Kalman filter first runs the step Update and then the step Predict."</span> <span class="badge f">F</span><span class="zh">先 Predict 后 Update。</span></li>
   <li><span class="badge year">26 Q47</span> <span class="en">"The standard Kalman filter works well with the <strong>kinematic model</strong> of the differentially steered robot."</span> <span class="badge t">T</span><span class="zh">运动学关系是线性的。（✓答对了）</span></li>
-  <li><span class="badge year">26 Q48</span> <span class="en">"... works well with the <strong>dynamic model</strong> ..."</span> <span class="badge f">F</span><span class="zh">动力学模型要用 EKF（标准 KF 只吃线性）。</span></li>
-  <li><span class="badge year">26 Q49</span> <span class="en">"... works well with the <strong>state vector [x, y, φ]</strong>."</span> <span class="badge f">F</span><span class="zh">含 φ 的位置更新非线性 → 需 EKF。</span></li>
+  <li><span class="badge year">26 Q48</span> <span class="en">"The standard Kalman filter works well with the <strong>dynamic model</strong> of the differentially steered robot."</span> <span class="badge f">F</span><span class="zh">动力学模型要用 EKF（标准 KF 只吃线性）。</span></li>
+  <li><span class="badge year">26 Q49</span> <span class="en">"The standard Kalman filter works well with the <strong>state vector [x, y, φ]</strong>."</span> <span class="badge f">F</span><span class="zh">含 φ 的位置更新非线性 → 需 EKF。</span></li>
 </ul>
 
 <!-- ============ 第6节 ============ -->
@@ -219,8 +219,8 @@
 </ul>
 <h3>真题演练 · 路径规划（仅 2025，Q38/Q39 需按所给图追踪）</h3>
 <ul class="qlist">
-  <li><span class="badge year">25 Q38</span> <span class="en">"When running Dijkstra ... (A to H), the distance to H is updated twice."</span> <span class="badge t">T</span><span class="zh">按图追踪：H 距离被更新 2 次。</span></li>
-  <li><span class="badge year">25 Q39</span> <span class="en">"... all nodes except one needs to be visited."</span> <span class="badge f">F</span></li>
+  <li><span class="badge year">25 Q38</span> <span class="en">"When running Dijkstra's algorithm on the above graph (from A to H), the distance to H is updated twice."</span> <span class="badge t">T</span><span class="zh">按图追踪：H 距离被更新 2 次。</span></li>
+  <li><span class="badge year">25 Q39</span> <span class="en">"When running Dijkstra's algorithm on the above graph (from A to H), all nodes except one needs to be visited."</span> <span class="badge f">F</span></li>
   <li><span class="badge year">25 Q40</span> <span class="en">"Dijkstra's algorithm is the most efficient algorithm for finding the shortest distance for a robot."</span> <span class="badge f">F</span><span class="zh">A* 更快。</span></li>
   <li><span class="badge year">25 Q41</span> <span class="en">"Dijkstra's algorithm is often used when controlling the speed of a robot."</span> <span class="badge f">F</span><span class="zh">它是<strong>路径规划</strong>。</span></li>
 </ul>
@@ -256,7 +256,7 @@
 <ul class="qlist">
   <li><span class="badge year">25 Q34 / 26 Q58</span> <span class="en">"In Symbolic AI, intelligence is decomposed into functional modules with <strong>no</strong> clearly defined data processing stages."</span> <span class="badge f">F</span><span class="zh">符号 AI 恰恰<strong>有</strong>清晰阶段，“no”说反。</span></li>
   <li><span class="badge year">25 Q35 / 26 Q59</span> <span class="en">"In evolutionary/embodied robotics, there are no clearly defined behaviours or data processing stages."</span> <span class="badge t">T</span></li>
-  <li><span class="badge year">25 Q37 / 26 Q60</span> <span class="en">"A fully connected ANN with X hidden layers can achieve any mapping between inputs and outputs."</span> <span class="badge t">T</span> <span class="badge warn">⚠️(26)</span><span class="zh">万能逼近。</span></li>
+  <li><span class="badge year">25 Q37 / 26 Q60</span> <span class="en">"A fully connected ANN with X hidden layers can achieve any mapping between inputs and outputs."（25）/ "A fully connected ANN with a sufficiently large number of hidden layers can achieve any mapping between inputs and outputs in a behavioural model."（26）</span> <span class="badge t">T</span> <span class="badge warn">⚠️(26)</span><span class="zh">万能逼近。</span></li>
 </ul>
 
 <!-- ============ 第8节 ============ -->

@@ -103,18 +103,18 @@
 
 <h3>Drill · Dockerfile (multi-stage build)</h3>
 <ul class="qlist">
-  <li><span class="badge year">24 Q3 / 25 Q3</span> <span class="en">"The build tools installed ... are needed in the resulting Docker image."</span> <span class="badge f">F</span><span class="zh">Build tools stay in the builder stage; the final image contains only the compiled program.</span></li>
-  <li><span class="badge year">24 Q4 / 25 Q4</span> <span class="en">"Every time a new Docker image is created ... the source code seems to be tested using pre-defined test cases."</span> <span class="badge t">T</span><span class="zh">Tests run at build time (make test).</span></li>
-  <li><span class="badge year">24 Q2 / 25 Q2</span> <span class="en">"The word builder ... is user-specified." / "The second FROM ... will start over, creating a second Docker image."</span> <span class="badge t">T</span><span class="zh">"builder" is a user-chosen name; a second FROM starts a fresh image.</span></li>
+  <li><span class="badge year">24 Q3 / 25 Q3</span> <span class="en">"The build tools installed from line 3 are installed since they are needed in the resulting Docker image (later deployed on the robot)."</span> <span class="badge f">F</span><span class="zh">Build tools stay in the builder stage; the final image contains only the compiled program.</span></li>
+  <li><span class="badge year">24 Q4 / 25 Q4</span> <span class="en">"Every time a new Docker image is created, from line 14, the source code seems to be tested using pre-defined test cases."</span> <span class="badge t">T</span><span class="zh">Tests run at build time (make test).</span></li>
+  <li><span class="badge year">24 Q2 / 25 Q2</span> <span class="en">"The word builder on line 2 is user-specified (rather than being a formal Docker keyword)." / "The second FROM (line 19) will start over, creating a second Docker image."</span> <span class="badge t">T</span><span class="zh">"builder" is a user-chosen name; a second FROM starts a fresh image.</span></li>
   <li><span class="badge year">24 Q5 / 25 Q5</span> <span class="en">"Ubuntu lacks the package libstdc++, making it unable to run the compiled program."</span> <span class="badge f">F</span><span class="zh">A made-up dependency claim.</span></li>
   <li><span class="badge year">24 Q6 / 25 Q6</span> <span class="en">"Line 24 immediately runs the compiled program."</span> <span class="badge f">F</span><span class="zh">CMD only declares the command to run when a container starts (the build merely records it).</span></li>
   <li><span class="badge year">25 Q1</span> <span class="en">"RUN commands can be placed before the first FROM command."</span> <span class="badge f">F</span><span class="zh">RUN must come after FROM.</span></li>
-  <li><span class="badge year">24 Q1</span> <span class="en">"Line 2 indicate what base image the resulting image will be based on."</span> <span class="badge f">F</span><span class="zh">In a multi-stage build the final image is based on the second FROM.</span></li>
+  <li><span class="badge year">24 Q1</span> <span class="en">"Line 2 indicate what base image the Docker resulting image will be based on."</span> <span class="badge f">F</span><span class="zh">In a multi-stage build the final image is based on the second FROM.</span></li>
 </ul>
 
 <h3>Drill · image size / docker run / libcluon</h3>
 <ul class="qlist">
-  <li><span class="badge year">24 Q7 / 25 Q7 / 26 Q18</span> <span class="en">"Alpine images are in general smaller ... compared to Ubuntu." (24: T) / "Ubuntu ... images are smaller than Alpine." (25: F) / "Ubuntu-based images are recommended ... include more features." (26: F)</span><span class="zh">One line: <strong>Alpine is small; robots use Alpine</strong>.</span></li>
+  <li><span class="badge year">24 Q7 / 25 Q7 / 26 Q18</span> <span class="en">"Alpine images are in general smaller in disk space compared to Ubuntu images." (24: T) / "Ubuntu is more suitable to use on robots, as the resulting images are smaller than Alpine." (25: F) / "Ubuntu-based Docker images are recommended to use on robots as they include more features." (26: F)</span><span class="zh">One line: <strong>Alpine is small; robots use Alpine</strong>.</span></li>
   <li><span class="badge year">24 Q9 / 25 Q9</span> <span class="en">"The command docker run spawns a Docker image."</span> <span class="badge f">F</span><span class="zh">run produces a container; docker build makes images.</span></li>
   <li><span class="badge year">26 Q20</span> <span class="en">"The command docker run creates a Docker container."</span> <span class="badge t">T</span> <span class="badge warn">⚠️</span><span class="zh">run produces a <strong>container</strong>.</span></li>
   <li><span class="badge year">26 Q28</span> <span class="en">"Small binaries are hard to achieve when cross-compiling."</span> <span class="badge f">F</span><span class="zh">Cross-compilation produces small binaries just as well.</span></li>
@@ -123,7 +123,7 @@
 
 <h3>Drill · microservices</h3>
 <ul class="qlist">
-  <li><span class="badge year">24 Q10 / 25 Q10 / 26 Q21</span> <span class="en">"A set of microservices ... shares a common communication protocol."</span> <span class="badge t">T</span><span class="zh">A common protocol.</span></li>
+  <li><span class="badge year">24 Q10 / 25 Q10 / 26 Q21</span> <span class="en">"A set of microservices deployed in a robot shares a common communication protocol."</span> <span class="badge t">T</span><span class="zh">A common protocol.</span></li>
   <li><span class="badge year">24 Q11 / 25 Q11</span> <span class="en">"A microservice should handle all the tasks needed for operating the robot."</span> <span class="badge f">F</span><span class="zh">One service, one task.</span></li>
   <li><span class="badge year">26 Q22</span> <span class="en">"A microservice should handle a single task."</span> <span class="badge t">T</span><span class="zh">Same fact, stated positively.</span></li>
   <li><span class="badge year">24 Q12 / 25 Q12 / 26 Q23</span> <span class="en">"Microservices makes it easier to plan what algorithms should run in/on a robot."</span> <span class="badge f">F</span> <span class="badge warn">⚠️(26)</span><span class="zh"><strong>F in all three years!</strong> Microservices are about deployment/isolation/updates — algorithm choice is separate.</span></li>
@@ -135,16 +135,16 @@
 <h3>Drill · cross-compilation / git / CI / OTA / SSH</h3>
 <ul class="qlist">
   <li><span class="badge year">24 Q14</span> <span class="en">"Cross-compilation is useful since we can compile software in Alpine to work with Ubuntu."</span> <span class="badge f">F</span><span class="zh">Cross-compilation crosses <strong>CPU architectures</strong> (amd64↔arm64), not Linux distributions.</span></li>
-  <li><span class="badge year">25 Q14</span> <span class="en">"... compile software on one CPU type (e.g. amd64) to run on another (e.g. arm64)."</span> <span class="badge t">T</span><span class="zh">That is the definition.</span></li>
-  <li><span class="badge year">26 Q26</span> <span class="en">"Cross-compilation can be especially useful ... as an automated part of a CI/CD pipeline."</span> <span class="badge t">T</span></li>
-  <li><span class="badge year">26 Q29</span> <span class="en">"A general difficulty ... Raspberry Pi uses ARM64 while a GitLab server runs AMD64."</span> <span class="badge f">F</span><span class="zh">The architectures do differ, but cross-compilation crosses the gap routinely — so "difficulty" makes it F.</span></li>
-  <li><span class="badge year">26 Q13</span> <span class="en">"Using git one can achieve traceability of <strong>binaries</strong> for robots."</span> <span class="badge f">F</span> <span class="badge warn">⚠️</span><span class="zh">git versions <strong>source code</strong>, not binaries; binary traceability comes from CI/CD (the "can" trap: technically possible but a misuse → F).</span></li>
+  <li><span class="badge year">25 Q14</span> <span class="en">"Cross-compilation is useful since we can compile software on one CPU type (e.g. amd64) to run on another (e.g. arm64)."</span> <span class="badge t">T</span><span class="zh">That is the definition.</span></li>
+  <li><span class="badge year">26 Q26</span> <span class="en">"Cross-compilation can be especially useful in robotics when configured as an automated part of a CI/CD pipeline."</span> <span class="badge t">T</span></li>
+  <li><span class="badge year">26 Q29</span> <span class="en">"A general difficulty when deploying a C++-based microservice to the Kiwi robot is that the Raspberry Pi uses an ARM64 CPU, while a GitLab server runs on an AMD64 CPU."</span> <span class="badge f">F</span><span class="zh">The architectures do differ, but cross-compilation crosses the gap routinely — so "difficulty" makes it F.</span></li>
+  <li><span class="badge year">26 Q13</span> <span class="en">"Using git one can achieve traceability (version identification) of <strong>binaries</strong> for robots."</span> <span class="badge f">F</span> <span class="badge warn">⚠️</span><span class="zh">git versions <strong>source code</strong>, not binaries; binary traceability comes from CI/CD (the "can" trap: technically possible but a misuse → F).</span></li>
   <li><span class="badge year">26 Q14</span> <span class="en">"GitLab and GitHub are examples of web-based frontends for git-based CI."</span> <span class="badge t">T</span></li>
   <li><span class="badge year">26 Q15</span> <span class="en">"CI includes automated testing of binaries."</span> <span class="badge t">T</span> <span class="badge warn">⚠️</span><span class="zh">Automated testing is the core of CI.</span></li>
   <li><span class="badge year">26 Q16</span> <span class="en">"HIL can be used as part of automated testing."</span> <span class="badge t">T</span> <span class="badge warn">⚠️</span><span class="zh">Hardware-in-the-loop can be automated.</span></li>
   <li><span class="badge year">26 Q17</span> <span class="en">"OTA is the process of reading performance data from robots in the field."</span> <span class="badge f">F</span> <span class="badge warn">⚠️</span><span class="zh">OTA <strong>pushes software down</strong>; reading data back is monitoring.</span></li>
   <li><span class="badge year">25 Q42</span> <span class="en">"There are at least three ways of getting a C++-based microservice to the Kiwi robot."</span> <span class="badge t">T</span><span class="zh">There is more than one deployment route.</span></li>
-  <li><span class="badge year">25 Q43 / 26 Q30</span> <span class="en">"SSH is a tool for cross-compilation." (F) / "SSH is a tool primarily used for software deployment." (F)</span> <span class="badge f">F</span><span class="zh">SSH is first and foremost a <strong>remote-login</strong> tool.</span></li>
+  <li><span class="badge year">25 Q43 / 26 Q30</span> <span class="en">"SSH is a tool for cross-compilation." (F) / "SSH is a tool primarily used for software deployment, for example in robots." (F)</span> <span class="badge f">F</span><span class="zh">SSH is first and foremost a <strong>remote-login</strong> tool.</span></li>
 </ul>
 
 <!-- ============ Section 4 ============ -->
@@ -163,7 +163,7 @@
   <li><span class="badge year">24 Q16 / 25 Q16</span> <span class="en">"The yaw rate is calculated as φ̇=(v_R−v_L)/R"</span> <span class="badge f">F</span><span class="zh">Denominator must be <strong>2R</strong>.</span></li>
   <li><span class="badge year">26 Q34</span> <span class="en">"It can be shown that v_R = V + φ̇R"</span> <span class="badge t">T</span><span class="zh">Solving back for one wheel speed from V and φ̇.</span></li>
   <li><span class="badge year">26 Q35</span> <span class="en">"The yaw rate is calculated as φ̇=(v_R−v_L)/2R"</span> <span class="badge t">T</span><span class="zh">Denominator 2R — correct.</span></li>
-  <li><span class="badge year">26 Q36</span> <span class="en">"x₁ = x₀ + ∫ (v_R+v_L)/2·cosφ dt"</span> <span class="badge t">T</span> <span class="badge warn">⚠️</span><span class="zh">Position = integral of the velocity component V·cosφ.</span></li>
+  <li><span class="badge year">26 Q36</span> <span class="en">"When integrating the x position of a differentially steered robot in simulation, the following can be used: x₁ = x₀ + ∫ (v_R(t)+v_L(t))/2 · cos φ(t) dt"</span> <span class="badge t">T</span> <span class="badge warn">⚠️</span><span class="zh">Position = integral of the velocity component V·cosφ.</span></li>
 </ul>
 
 <!-- ============ Section 5 ============ -->
@@ -179,16 +179,16 @@
 <h3>Past-exam drill</h3>
 <ul class="qlist">
   <li><span class="badge year">24 Q21 / 25 Q21 / 26 Q42</span> <span class="en">"A Kalman filter is often used when sensors have too low update frequency."</span> <span class="badge t">T</span></li>
-  <li><span class="badge year">24 Q23 / 25 Q23</span> <span class="en">"... when sensors are noisy."</span> <span class="badge t">T</span></li>
+  <li><span class="badge year">24 Q23 / 25 Q23</span> <span class="en">"A Kalman filter is often used when sensors are noisy."</span> <span class="badge t">T</span></li>
   <li><span class="badge year">24 Q26 / 25 Q26</span> <span class="en">"A Kalman filter can be used for localization of a robot."</span> <span class="badge t">T</span></li>
-  <li><span class="badge year">24 Q22</span> <span class="en">"... when there is no good model of the robot motion."</span> <span class="badge t">T/F both accepted</span><span class="zh">The examiner announced both answers are accepted.</span></li>
+  <li><span class="badge year">24 Q22</span> <span class="en">"A Kalman filter is often used when there is no good model of the robot motion."</span> <span class="badge t">T/F both accepted</span><span class="zh">The examiner announced both answers are accepted.</span></li>
   <li><span class="badge year">25 Q22 / 26 Q43</span> <span class="en">"A Kalman filter can not be used in a robot, since it requires recorded data."</span> <span class="badge f">F</span><span class="zh">The KF is online and recursive — it runs live just fine.</span></li>
   <li><span class="badge year">24 Q24 / 25 Q24 / 26 Q45</span> <span class="en">"The process model and observation model are two ways of modelling the sensors."</span> <span class="badge f">F</span><span class="zh">The process model models <strong>motion</strong>.</span></li>
   <li><span class="badge year">24 Q25 / 25 Q25 / 26 Q46</span> <span class="en">"The Kalman gain is used to increase the frequency of sensors."</span> <span class="badge f">F</span><span class="zh">The gain is a trust weight.</span></li>
   <li><span class="badge year">26 Q44</span> <span class="en">"A Kalman filter first runs the step Update and then the step Predict."</span> <span class="badge f">F</span><span class="zh">Predict first, then Update.</span></li>
   <li><span class="badge year">26 Q47</span> <span class="en">"The standard Kalman filter works well with the <strong>kinematic model</strong> of the differentially steered robot."</span> <span class="badge t">T</span><span class="zh">The kinematic relations are linear.</span></li>
-  <li><span class="badge year">26 Q48</span> <span class="en">"... works well with the <strong>dynamic model</strong> ..."</span> <span class="badge f">F</span><span class="zh">The dynamic model needs the EKF (the standard KF eats linear only).</span></li>
-  <li><span class="badge year">26 Q49</span> <span class="en">"... works well with the <strong>state vector [x, y, φ]</strong>."</span> <span class="badge f">F</span><span class="zh">The position update with φ is non-linear → EKF.</span></li>
+  <li><span class="badge year">26 Q48</span> <span class="en">"The standard Kalman filter works well with the <strong>dynamic model</strong> of the differentially steered robot."</span> <span class="badge f">F</span><span class="zh">The dynamic model needs the EKF (the standard KF eats linear only).</span></li>
+  <li><span class="badge year">26 Q49</span> <span class="en">"The standard Kalman filter works well with the <strong>state vector [x, y, φ]</strong>."</span> <span class="badge f">F</span><span class="zh">The position update with φ is non-linear → EKF.</span></li>
 </ul>
 
 <!-- ============ Section 6 ============ -->
@@ -219,8 +219,8 @@
 </ul>
 <h3>Drill · path planning (2025 only; Q38/Q39 traced on the given graph)</h3>
 <ul class="qlist">
-  <li><span class="badge year">25 Q38</span> <span class="en">"When running Dijkstra ... (A to H), the distance to H is updated twice."</span> <span class="badge t">T</span><span class="zh">Tracing the graph: H's distance is updated twice.</span></li>
-  <li><span class="badge year">25 Q39</span> <span class="en">"... all nodes except one needs to be visited."</span> <span class="badge f">F</span></li>
+  <li><span class="badge year">25 Q38</span> <span class="en">"When running Dijkstra's algorithm on the above graph (from A to H), the distance to H is updated twice."</span> <span class="badge t">T</span><span class="zh">Tracing the graph: H's distance is updated twice.</span></li>
+  <li><span class="badge year">25 Q39</span> <span class="en">"When running Dijkstra's algorithm on the above graph (from A to H), all nodes except one needs to be visited."</span> <span class="badge f">F</span></li>
   <li><span class="badge year">25 Q40</span> <span class="en">"Dijkstra's algorithm is the most efficient algorithm for finding the shortest distance for a robot."</span> <span class="badge f">F</span><span class="zh">A* is quicker.</span></li>
   <li><span class="badge year">25 Q41</span> <span class="en">"Dijkstra's algorithm is often used when controlling the speed of a robot."</span> <span class="badge f">F</span><span class="zh">It is a <strong>path-planning</strong> algorithm.</span></li>
 </ul>
@@ -256,7 +256,7 @@
 <ul class="qlist">
   <li><span class="badge year">25 Q34 / 26 Q58</span> <span class="en">"In Symbolic AI, intelligence is decomposed into functional modules with <strong>no</strong> clearly defined data processing stages."</span> <span class="badge f">F</span><span class="zh">Symbolic AI <strong>does</strong> have clearly defined stages — the "no" flips it.</span></li>
   <li><span class="badge year">25 Q35 / 26 Q59</span> <span class="en">"In evolutionary/embodied robotics, there are no clearly defined behaviours or data processing stages."</span> <span class="badge t">T</span></li>
-  <li><span class="badge year">25 Q37 / 26 Q60</span> <span class="en">"A fully connected ANN with X hidden layers can achieve any mapping between inputs and outputs."</span> <span class="badge t">T</span> <span class="badge warn">⚠️(26)</span><span class="zh">Universal approximation.</span></li>
+  <li><span class="badge year">25 Q37 / 26 Q60</span> <span class="en">"A fully connected ANN with X hidden layers can achieve any mapping between inputs and outputs." (25) / "A fully connected ANN with a sufficiently large number of hidden layers can achieve any mapping between inputs and outputs in a behavioural model." (26)</span> <span class="badge t">T</span> <span class="badge warn">⚠️(26)</span><span class="zh">Universal approximation.</span></li>
 </ul>
 
 <!-- ============ Section 8 ============ -->
