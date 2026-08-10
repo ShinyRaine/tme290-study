@@ -16,6 +16,7 @@
       <a href="index.html">知识手册</a>
       <a href="plan.html">复习计划</a>
       <a href="exam.html" class="active">自测</a>
+      <a href="wrongbook.html">错题本</a>
     </div>
   </div>
 </nav>
@@ -41,6 +42,7 @@
 <footer>做完复盘错题时，回<a href="index.html">知识手册</a>对应节看原理，不要只记答案。</footer>
 
 <script src="exam-data.js"></script>
+<script src="sync.js"></script>
 <script>
 (function () {
   var appEl = document.getElementById('app');
@@ -256,7 +258,7 @@
         (exam.penalty ? '<div>按 2024 原卷规则（答错 −1、留空 0）：<strong>' + (score - wrong) + '</strong> 分</div>' : '') +
         '<div>错题/留空：' + (wrongList.length ? wrongList.map(function (n) { return '<a href="#q' + n + '">' + n + '</a>'; }).join(', ') : '无 🎉') +
         (blank ? '（其中留空 ' + blank + ' 题）' : '') + '</div>' +
-        '<div style="color:var(--muted);font-size:0.9rem">复盘：点错题号跳到解析，再回<a href="index.html">知识手册</a>对应节看原理。</div>' +
+        '<div style="color:var(--muted);font-size:0.9rem">复盘：点错题号跳到解析，再回<a href="index.html">知识手册</a>对应节看原理。错题已自动存入 <a href="wrongbook.html">错题本</a>。</div>' +
       '</div>';
 
     exam.sections.forEach(function (sec) {
@@ -286,6 +288,7 @@
     if (done < ALL.length && !confirm('还有 ' + (ALL.length - done) + ' 题未作答。确定交卷？')) return;
     state.submitted = true;
     save();
+    if (window.WrongBook) try { WrongBook.recordResult(exam, ALL, state, isCorrect); } catch (e) {}
     render();
   }
 

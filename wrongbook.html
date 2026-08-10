@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>TME290 错题本 · 跨端同步</title>
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
+<style>
+  .sync-box { background: var(--accent-soft); border: 1px solid var(--line); border-radius: 12px; padding: 1rem 1.1rem; margin: 0 0 1.2rem; }
+  .sync-box .row { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; }
+  .sync-box input { flex: 1 1 180px; min-width: 140px; padding: 0.55rem 0.7rem; border: 1px solid var(--line); border-radius: 8px; font-size: 0.95rem; }
+  .sync-box .hint { color: var(--muted); font-size: 0.85rem; margin: 0.55rem 0 0; }
+  .sync-status { font-size: 0.88rem; margin-left: auto; }
+  .filters { display: flex; gap: 0.4rem; flex-wrap: wrap; margin: 0 0 1rem; }
+  .filters button { padding: 0.35rem 0.7rem; border: 1px solid var(--line); background: #fff; color: var(--muted); border-radius: 999px; font-size: 0.85rem; cursor: pointer; }
+  .filters button.on { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .wb-item .top { display: flex; justify-content: space-between; gap: 0.6rem; align-items: baseline; }
+  .wb-item .top .rmv { flex: 0 0 auto; font-size: 0.82rem; padding: 0.25rem 0.55rem; border-radius: 6px; border: 1px solid var(--line); background: #fff; color: var(--muted); cursor: pointer; }
+  .wb-item .top .rmv:hover { border-color: var(--accent); color: var(--accent); }
+  .empty { text-align: center; color: var(--muted); padding: 2.5rem 1rem; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="index.html">TME290 <span>自主机器人</span> 备考站</a>
+    <div class="links">
+      <a href="index.html">知识手册</a>
+      <a href="plan.html">复习计划</a>
+      <a href="exam.html">自测</a>
+      <a href="wrongbook.html" class="active">错题本</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<div class="hero">
+  <h1>错题本</h1>
+  <p>交卷时错题/留空会自动收进这里。设一个同步口令，换设备输同样口令即可看到同一份错题本。答对或点“已弄懂”即移除。</p>
+</div>
+
+<div class="sync-box">
+  <div class="row">
+    <input id="codeInput" placeholder="同步口令（4-64 位字母/数字/-_）" autocapitalize="off" autocorrect="off" spellcheck="false">
+    <button class="btn primary" id="syncBtn">保存并同步</button>
+    <span class="sync-status muted" id="syncStatus"></span>
+  </div>
+  <p class="hint">口令只存在你各设备的浏览器里，充当云端数据的钥匙 —— 请用别人猜不到的词。留空则仅本机保存。</p>
+</div>
+
+<div class="filters" id="filters"></div>
+<div id="list"></div>
+
+</div>
+
+<footer>复盘错题回<a href="index.html">知识手册</a>对应节看原理，不要只记答案。</footer>
+
+<script src="exam-data.js"></script>
+<script src="sync.js"></script>
+<script>
+(function () {
+  var listEl = document.getElementById('list');
+  var filtersEl = document.getElementById('filters');
+  var codeInput = document.getElementById('codeInput');
+  var syncBtn = document.getElementById('syncBtn');
+  var statusEl = document.getElementById('syncStatus');
+  var filter = 'all';
+
+  function esc(s) { return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+  function setStatus(t, cls) { statusEl.textContent = t; statusEl.className = 'sync-status ' + (cls || 'muted'); }
+
+  function keyOf(e) { return e.examId + '#' + e.n; }
+
+  function render() {
+    var items = WrongBook.activeList(WrongBook.load());
+
+    // 试卷筛选条
+    var byExam = {};
+    items.forEach(function (e) { byExam[e.examId] = byExam[e.examId] || { title: e.examTitle, n: 0 }; byExam[e.examId].n++; });
+    var fhtml = '<button data-f="all" class="' + (filter === 'all' ? 'on' : '') + '">全部 ' + items.length + '</button>';
+    Object.keys(byExam).forEach(function (id) {
+      fhtml += '<button data-f="' + id + '" class="' + (filter === id ? 'on' : '') + '">' + esc(byExam[id].title) + ' ' + byExam[id].n + '</button>';
+    });
+    filtersEl.innerHTML = fhtml;
+    filtersEl.querySelectorAll('button').forEach(function (b) {
+      b.addEventListener('click', function () { filter = b.dataset.f; render(); });
+    });
+
+    var shown = items.filter(function (e) { return filter === 'all' || e.examId === filter; });
+    if (!shown.length) {
+      listEl.innerHTML = '<div class="empty">' + (items.length ? '该卷暂无错题。' : '还没有错题 🎉 去<a href="exam.html">自测</a>做几套，交卷后错题会自动出现在这里。') + '</div>';
+      return;
+    }
+
+    var html = '', curExam = null;
+    shown.forEach(function (e) {
+      if (e.examId !== curExam) { curExam = e.examId; html += '<div class="section-title">' + esc(e.examTitle) + '</div>'; }
+      var correct = e.correct === 'both' ? 'T/F 均可' : e.correct;
+      var yours = e.user === '' ? '留空' : (e.user === 'T' ? 'True' : 'False');
+      var cls = e.user === '' ? 'blank-q' : 'wrong';
+      html +=
+        '<div class="question ' + cls + ' wb-item" data-k="' + esc(keyOf(e)) + '">' +
+          '<div class="top">' +
+            '<p class="stem"><span class="num">' + e.n + '.</span>' + esc(e.q) + '</p>' +
+            '<button class="rmv" title="已弄懂，移出错题本">已弄懂 ✓</button>' +
+          '</div>' +
+          '<div class="explain">' +
+            (e.user === '' ? '⚠️ <strong>留空</strong>' : '❌ 你选 <strong>' + yours + '</strong>') +
+            ' · 正确答案 <strong>' + correct + '</strong> — ' + esc(e.explain) +
+          '</div>' +
+        '</div>';
+    });
+    listEl.innerHTML = html;
+    listEl.querySelectorAll('.wb-item .rmv').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        WrongBook.resolve(btn.closest('.wb-item').dataset.k);
+        render();
+      });
+    });
+  }
+
+  syncBtn.addEventListener('click', function () {
+    var code = codeInput.value.trim();
+    if (code && !WrongBook.validCode(code)) { setStatus('口令需 4-64 位字母/数字/-_', 'muted'); return; }
+    WrongBook.setCode(code);
+    if (!code) { setStatus('已清除口令，仅本机保存', 'muted'); render(); return; }
+    setStatus('同步中…', 'muted');
+    WrongBook.sync().then(function () {
+      setStatus('已同步 ✓', 'muted'); render();
+    }).catch(function (e) {
+      setStatus(e && e.message === 'no-code' ? '请先填口令' : '同步失败（后端未配置或网络问题），已保留本机数据', 'muted');
+    });
+  });
+
+  // 启动：回填口令，若已设则自动拉取合并
+  codeInput.value = WrongBook.getCode();
+  render();
+  if (WrongBook.validCode(WrongBook.getCode())) {
+    setStatus('同步中…', 'muted');
+    WrongBook.sync().then(function () { setStatus('已同步 ✓', 'muted'); render(); })
+      .catch(function () { setStatus('离线 / 后端未配置，显示本机数据', 'muted'); });
+  }
+})();
+</script>
+</body>
+</html>
