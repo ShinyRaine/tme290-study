@@ -52,7 +52,9 @@
 </div>
 
 <div class="filters" id="filters"></div>
+<div id="retestBar"></div>
 <div id="list"></div>
+<div id="retest" style="display:none"></div>
 
 </div>
 
@@ -64,15 +66,20 @@
 (function () {
   var listEl = document.getElementById('list');
   var filtersEl = document.getElementById('filters');
+  var retestBar = document.getElementById('retestBar');
+  var retestEl = document.getElementById('retest');
+  var syncBox = document.querySelector('.sync-box');
   var codeInput = document.getElementById('codeInput');
   var syncBtn = document.getElementById('syncBtn');
   var statusEl = document.getElementById('syncStatus');
   var filter = 'all';
+  var rt = null; // 重测状态：{ items, idx, answers, submitted }
 
   function esc(s) { return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
   function setStatus(t, cls) { statusEl.textContent = t; statusEl.className = 'sync-status ' + (cls || 'muted'); }
 
   function keyOf(e) { return e.examId + '#' + e.n; }
+  function isRight(e, u) { if (u === undefined) return false; if (e.correct === 'both') return true; return u === e.correct; }
 
   function render() {
     var items = WrongBook.activeList(WrongBook.load());
@@ -90,6 +97,15 @@
     });
 
     var shown = items.filter(function (e) { return filter === 'all' || e.examId === filter; });
+
+    if (shown.length) {
+      retestBar.innerHTML = '<button class="btn primary" id="startRetest" style="margin-bottom:1rem">🔁 重测' +
+        (filter === 'all' ? '全部' : '本卷') + '错题（' + shown.length + '）</button>';
+      document.getElementById('startRetest').addEventListener('click', function () { startRetest(shown.slice()); });
+    } else {
+      retestBar.innerHTML = '';
+    }
+
     if (!shown.length) {
       listEl.innerHTML = '<div class="empty">' + (items.length ? '该卷暂无错题。' : '还没有错题 🎉 去<a href="exam.html">自测</a>做几套，交卷后错题会自动出现在这里。') + '</div>';
       return;
@@ -121,6 +137,166 @@
       });
     });
   }
+
+  // ---------- 错题重测 ----------
+  function showBookView(v) {
+    syncBox.style.display = v ? '' : 'none';
+    filtersEl.style.display = v ? '' : 'none';
+    retestBar.style.display = v ? '' : 'none';
+    listEl.style.display = v ? '' : 'none';
+    retestEl.style.display = v ? 'none' : '';
+  }
+
+  function startRetest(items) {
+    if (!items.length) return;
+    rt = { items: items, idx: 0, answers: {}, submitted: false };
+    showBookView(false);
+    renderRetest();
+    window.scrollTo({ top: 0 });
+  }
+
+  function rtGo(i) {
+    rt.idx = Math.max(0, Math.min(rt.items.length, i));
+    renderRetest();
+    window.scrollTo({ top: 0 });
+  }
+
+  function rtAnswer(v) {
+    var e = rt.items[rt.idx];
+    rt.answers[keyOf(e)] = v;
+    var at = rt.idx;
+    var b = document.getElementById(v === 'T' ? 'rT' : 'rF');
+    var o = document.getElementById(v === 'T' ? 'rF' : 'rT');
+    if (b) { b.classList.add('sel'); o.classList.remove('sel'); }
+    setTimeout(function () { if (rt && !rt.submitted && rt.idx === at) rtGo(at + 1); }, 180);
+  }
+
+  function rtDone() { return Object.keys(rt.answers).length; }
+
+  function renderRetest() {
+    if (rt.submitted) { renderRetestResult(); return; }
+    if (rt.idx >= rt.items.length) { renderRetestFinish(); return; }
+    var e = rt.items[rt.idx];
+    var u = rt.answers[keyOf(e)];
+    var pct = Math.round(rtDone() / rt.items.length * 100);
+    retestEl.innerHTML =
+      '<div class="single">' +
+        '<div class="progressbar"><div style="width:' + pct + '%"></div></div>' +
+        '<div class="qcard">' +
+          '<div class="meta"><span class="sec">' + esc(e.examTitle) + '</span><span>第 ' + (rt.idx + 1) + ' / ' + rt.items.length + ' 题</span></div>' +
+          '<p class="stem-big">' + esc(e.q) + '</p>' +
+          '<div class="big-tf">' +
+            '<button class="bf' + (u === 'F' ? ' sel' : '') + '" id="rF">✗ False</button>' +
+            '<button class="bt' + (u === 'T' ? ' sel' : '') + '" id="rT">✓ True</button>' +
+          '</div>' +
+          '<div class="qnav">' +
+            '<button class="btn ghost" id="rPrev"' + (rt.idx === 0 ? ' disabled' : '') + '>← 上一题</button>' +
+            '<button class="btn ghost" id="rSkip">' + (u ? '下一题 →' : '跳过 →') + '</button>' +
+          '</div>' +
+          '<div class="qnav" style="margin-top:0.6rem">' +
+            '<button class="btn ghost" id="rExit">退出重测</button>' +
+            '<button class="btn primary" id="rSubmit">交卷判分</button>' +
+          '</div>' +
+          '<div class="kbd-hint">键盘：← False · → True · ⌫ 上一题</div>' +
+        '</div>' +
+      '</div>';
+    document.getElementById('rF').addEventListener('click', function () { rtAnswer('F'); });
+    document.getElementById('rT').addEventListener('click', function () { rtAnswer('T'); });
+    document.getElementById('rPrev').addEventListener('click', function () { rtGo(rt.idx - 1); });
+    document.getElementById('rSkip').addEventListener('click', function () { rtGo(rt.idx + 1); });
+    document.getElementById('rExit').addEventListener('click', exitRetest);
+    document.getElementById('rSubmit').addEventListener('click', submitRetest);
+  }
+
+  function renderRetestFinish() {
+    var blanks = rt.items.filter(function (e) { return rt.answers[keyOf(e)] === undefined; });
+    var html =
+      '<div class="single"><div class="qcard">' +
+        '<h2 style="margin:0 0 0.6rem;border:none;padding:0">已到末尾 · 已答 ' + rtDone() + ' / ' + rt.items.length + '</h2>' +
+        (blanks.length ? '<p>还有 <strong>' + blanks.length + '</strong> 题留空，留空按答错处理（仍留在错题本）。</p>' : '<p>全部作答完毕 🎉</p>') +
+        '<div class="qnav">' +
+          '<button class="btn ghost" id="rBackChk">← 回去检查</button>' +
+          '<button class="btn primary" id="rFinish">交卷判分</button>' +
+        '</div>' +
+        '<div class="qnav" style="margin-top:0.6rem"><button class="btn ghost" id="rExit2">退出重测</button></div>' +
+      '</div></div>';
+    retestEl.innerHTML = html;
+    document.getElementById('rBackChk').addEventListener('click', function () { rtGo(rt.items.length - 1); });
+    document.getElementById('rFinish').addEventListener('click', submitRetest);
+    document.getElementById('rExit2').addEventListener('click', exitRetest);
+  }
+
+  function submitRetest() {
+    var done = rtDone();
+    if (done < rt.items.length && !confirm('还有 ' + (rt.items.length - done) + ' 题未作答（按答错处理）。确定交卷？')) return;
+    rt.submitted = true;
+    applyRetest();
+    renderRetest();
+  }
+
+  // 把重测结果写回错题本：答对 → 移出（墓碑）；仍错/留空 → 更新作答并刷新时间戳
+  function applyRetest() {
+    var book = WrongBook.load(), t = Date.now();
+    rt.items.forEach(function (e) {
+      var k = keyOf(e);
+      if (!book.data[k]) return;
+      var u = rt.answers[k];
+      if (isRight(e, u)) {
+        book.data[k] = Object.assign({}, book.data[k], { removed: true, ts: t });
+      } else {
+        book.data[k] = Object.assign({}, book.data[k], { user: u === undefined ? '' : u, ts: t });
+      }
+    });
+    book.updatedAt = t;
+    WrongBook.saveLocal(book);
+    WrongBook.push();
+  }
+
+  function renderRetestResult() {
+    var right = 0, stillWrong = 0;
+    rt.items.forEach(function (e) { if (isRight(e, rt.answers[keyOf(e)])) right++; else stillWrong++; });
+    var html =
+      '<div class="result-banner">' +
+        '<div><span class="score">' + right + '</span> / ' + rt.items.length + ' 答对</div>' +
+        '<div>' +
+          (right ? '弄懂 ' + right + ' 题，已移出错题本 ✅' : '') +
+          (stillWrong ? (right ? ' · ' : '') + '仍错 ' + stillWrong + ' 题，留在错题本' : '') +
+        '</div>' +
+        '<div style="color:var(--muted);font-size:0.9rem">仍错的回<a href="index.html">知识手册</a>对应节看原理，再来一遍。</div>' +
+      '</div>';
+    rt.items.forEach(function (e) {
+      var u = rt.answers[keyOf(e)];
+      var ok = isRight(e, u);
+      var correct = e.correct === 'both' ? 'T/F 均可' : e.correct;
+      var yours = u === undefined ? '留空' : (u === 'T' ? 'True' : 'False');
+      html +=
+        '<div class="question ' + (ok ? 'correct' : (u === undefined ? 'blank-q' : 'wrong')) + '">' +
+          '<p class="stem"><span class="num">' + e.n + '.</span>' + esc(e.q) + '</p>' +
+          '<div class="explain">' +
+            (ok ? '✅ 答对，已移出' : (u === undefined ? '⚠️ 留空' : '❌ 你选 <strong>' + yours + '</strong>')) +
+            ' · 正确答案 <strong>' + correct + '</strong> — ' + esc(e.explain) +
+          '</div>' +
+        '</div>';
+    });
+    html += '<div class="qnav" style="margin-top:1rem"><button class="btn primary" id="rBack">← 返回错题本</button></div>';
+    retestEl.innerHTML = html;
+    document.getElementById('rBack').addEventListener('click', exitRetest);
+    window.scrollTo({ top: 0 });
+  }
+
+  function exitRetest() {
+    rt = null;
+    showBookView(true);
+    render();
+    window.scrollTo({ top: 0 });
+  }
+
+  document.addEventListener('keydown', function (ev) {
+    if (!rt || rt.submitted || rt.idx >= rt.items.length) return;
+    if (ev.key === 'ArrowLeft') { ev.preventDefault(); rtAnswer('F'); }
+    else if (ev.key === 'ArrowRight') { ev.preventDefault(); rtAnswer('T'); }
+    else if (ev.key === 'Backspace') { ev.preventDefault(); rtGo(rt.idx - 1); }
+  });
 
   syncBtn.addEventListener('click', function () {
     var code = codeInput.value.trim();
